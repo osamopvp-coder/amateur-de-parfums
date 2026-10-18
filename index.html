@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AMATEUR DE PARFUMS | عاصمة العطور الفاخرة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/trajan-pro');
+        * { box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; overflow-x: hidden; width: 100%; margin: 0; padding: 0; transition: background 0.4s ease, color 0.4s ease; position: relative; }
+
+        body.dark-theme { background-color: #071410; color: #f4efea; }
+        body.light-theme { background-color: #fcfbf7; color: #112218; }
+
+        #gold-particles-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; opacity: 0.85;
+        }
+
+        .modern-header, main, footer { position: relative; z-index: 10; }
+
+        .modern-header {
+            background: rgba(7, 20, 16, 0.98);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        body.light-theme .modern-header {
+            background: rgba(252, 251, 247, 0.98);
+            border-bottom: 1px solid rgba(197, 155, 39, 0.3);
+        }
+
+        .pure-gold-text { color: #d4af37 !important; font-family: 'Trajan Pro', serif; }
+        .trajan-font { font-family: 'Trajan Pro', serif; }
+        .arabic-royal-font { font-family: 'Amiri', serif; }
+
+        .luxury-card {
+            background: rgba(15, 30, 24, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            backdrop-filter: blur(10px);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        body.light-theme .luxury-card {
+            background: #ffffff;
+            border: 1px solid rgba(197, 155, 39, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+
+        /* انيميشن الضغط السلس للأزرار */
+        button, a, .advisor-card-option {
+            transition: transform 0.15s ease, background 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 25;
+            cursor: pointer;
+        }
+        button:active, a:active {
+            transform: scale(0.96);
+        }
+
+        .luxury-btn {
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+        }
+        .luxury-btn:hover { background: #d4af37; color: #071410; }
+
+        .circle-icon-btn {
+            background: transparent;
+            border: none;
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        @media (min-width: 768px) {
+            .circle-icon-btn { width: 42px; height: 42px; min-width: 42px; }
+        }
+        .circle-icon-btn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.9);
+        }
+        .circle-icon-btn img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+        #cart-count-badge {
+            position: absolute; top: -3px; right: -3px;
+            background: linear-gradient(135deg, #fef08a, #ca8a04);
+            color: #071410; font-size: 10px; font-weight: 900;
+            border-radius: 50%; height: 18px; width: 18px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.9); border: 1.5px solid #071410; z-index: 30;
+        }
+
+        .mobile-menu-dropdown {
+            position: absolute; top: 100%; right: 1rem;
+            background: rgba(7, 20, 16, 0.98); border: 1px solid rgba(212, 175, 55, 0.4);
+            backdrop-filter: blur(16px); border-radius: 16px; padding: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8); z-index: 100; display: none; flex-direction: column; gap: 10px; min-width: 190px;
+        }
+        body.light-theme .mobile-menu-dropdown { background: rgba(252, 251, 247, 0.98); }
+        .mobile-menu-dropdown.active { display: flex; }
+        .mobile-menu-item {
+            display: flex; align-items: center; gap: 12px; padding: 8px 12px;
+            border-radius: 10px; color: #d4af37; font-weight: 700; font-size: 13px; text-decoration: none; cursor: pointer;
+        }
+        .mobile-menu-item:hover { background: rgba(212, 175, 55, 0.15); }
+        .mobile-menu-item img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid #d4af37; }
+
+        .royal-admin-icon-btn, .royal-cart-icon-btn {
+            background: transparent; border: 2px solid #d4af37; cursor: pointer;
+            width: 38px; height: 38px; min-width: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; padding: 0;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); color: #fde047; text-decoration: none;
+        }
+        @media (min-width: 768px) {
+            .royal-admin-icon-btn, .royal-cart-icon-btn { width: 42px; height: 42px; min-width: 42px; }
+        }
+        .royal-admin-icon-btn:hover, .royal-cart-icon-btn:hover {
+            transform: scale(1.12); box-shadow: 0 0 25px rgba(253, 224, 71, 0.9); background: rgba(212, 175, 55, 0.15); color: #fff;
+        }
+
+        .royal-save-btn {
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+            color: #071410; border: 2px solid #ffe680; border-radius: 1rem; padding: 1rem;
+            font-weight: 900; font-size: 15px; text-transform: uppercase;
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.5); cursor: pointer; width: 100%; text-align: center;
+        }
+        .royal-save-btn:hover { transform: scale(1.02); box-shadow: 0 8px 30px rgba(212, 175, 55, 0.8); }
+
+        .admin-image-card {
+            position: relative; aspect-ratio: 1 / 1; border-radius: 2rem; overflow: hidden;
+            border: 2px solid rgba(212, 175, 55, 0.4); cursor: pointer; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 2rem;
+        }
+        .admin-image-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(3, 10, 8, 0.95) 15%, rgba(3, 10, 8, 0.2) 60%, transparent 100%);
+        }
+        .admin-image-card:hover { transform: translateY(-8px); border-color: #d4af37; box-shadow: 0 30px 60px rgba(212, 175, 55, 0.3); }
+        .admin-card-content { position: relative; z-index: 10; width: 100%; text-align: center; }
+
+        @keyframes pageCinematicEnter {
+            0% { opacity: 0; transform: scale(0.95) translateY(25px) rotateX(8deg); filter: blur(6px); }
+            100% { opacity: 1; transform: scale(1) translateY(0) rotateX(0deg); filter: blur(0px); }
+        }
+        .view-enter { animation: pageCinematicEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        .article-slider-container { position: relative; overflow: hidden; border-radius: 1.5rem; width: 100%; height: 260px; background: #030a08; border: 1px solid rgba(212,175,55,0.4); }
+        .article-slider-wrapper { position: relative; width: 100%; height: 100%; }
+        .article-slide { position: absolute; inset: 0; opacity: 0; transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); transform: scale(1.08) translateY(20px); }
+        .article-slide.active { opacity: 1; transform: scale(1) translateY(0); z-index: 2; }
+        .article-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        .hero-slider-container {
+            position: relative; overflow: hidden; border-radius: 1rem; min-height: 400px; display: flex; align-items: flex-start; padding-top: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transform: translateX(-50px); transition: opacity 1s ease-in-out, transform 1s ease-in-out; z-index: 1; }
+        .hero-slide.active { opacity: 1; transform: translateX(0); z-index: 2; }
+
+        .story-slider-container { position: relative; overflow: hidden; border-radius: 1.5rem; width: 100%; height: 250px; }
+        @media (min-width: 768px) { .story-slider-container { height: 380px; } }
+        .story-slide { position: absolute; inset: 0; opacity: 0; transform: translateX(-40px); transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out; z-index: 1; }
+        .story-slide.active { opacity: 1; transform: translateX(0); z-index: 2; }
+        .story-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        .detail-slider-container { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 0.75rem; }
+        .detail-slide { position: absolute; inset: 0; opacity: 0; transform: translateX(-30px); transition: opacity 1s ease-in-out, transform 1s ease-in-out; z-index: 1; }
+        .detail-slide.active { opacity: 1; transform: translateX(0); z-index: 2; }
+        .detail-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        .signin-custom-btn {
+            display: inline-flex; align-items: center;
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+            color: #071410; border-radius: 50px; padding: 3px 12px 3px 3px;
+            font-weight: 800; font-size: 11px; text-transform: uppercase;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4); cursor: pointer; border: 1px solid #ffe680;
+        }
+        .signin-icon-circle {
+            width: 28px; height: 28px; background: #071410; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-left: 6px; overflow: hidden;
+            border: 1px solid #d4af37; color: #d4af37;
+        }
+        .signin-icon-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(3, 10, 8, 0.85); backdrop-filter: blur(12px);
+            z-index: 200; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease; padding: 1rem;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box {
+            background: linear-gradient(145deg, #0a1f18, #050e0b); border: 2px solid rgba(212, 175, 55, 0.6); border-radius: 2rem;
+            width: 100%; max-width: 450px; padding: 2rem 1.5rem; box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+            transform: translateY(40px) scale(0.98); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative; z-index: 210;
+        }
+        .modal-overlay.active .modal-box { transform: translateY(0) scale(1); }
+
+        .store-video-container {
+            position: relative; width: 100%; border-radius: 1.5rem; overflow: hidden; border: 3px solid #d4af37;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8); background: #030a08; padding: 6px;
+        }
+        .store-video-container video { width: 100%; height: auto; display: block; max-height: 400px; object-fit: cover; }
+        .store-video-container.ended video { filter: blur(8px) brightness(0.5); transform: scale(1.02); }
+        
+        .replay-btn-overlay {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: rgba(3, 10, 8, 0.4); opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 20;
+        }
+        .store-video-container.ended .replay-btn-overlay { opacity: 1; pointer-events: auto; cursor: pointer; }
+        .replay-icon {
+            width: 70px; height: 70px; border: 2px solid #d4af37; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(7, 20, 16, 0.95), rgba(212, 175, 55, 0.2));
+            color: #d4af37; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(212, 175, 55, 0.7);
+            transition: all 0.4s ease;
+        }
+        .replay-icon:hover { transform: scale(1.15) rotate(180deg); background: #d4af37; color: #071410; }
+
+        .live-search-dropdown {
+            position: absolute; top: 100%; right: 0; left: 0; margin-top: 8px;
+            background: rgba(7, 20, 16, 0.95); border: 1px solid rgba(212, 175, 55, 0.4);
+            backdrop-filter: blur(16px); border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            z-index: 100; max-height: 320px; overflow-y: auto; display: none;
+        }
+        .live-search-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15); cursor: pointer; transition: background 0.2s ease;
+        }
+        .live-search-item:hover { background: rgba(212, 175, 55, 0.15); }
+        .live-search-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+
+        .floating-advisor-btn {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 900; width: 60px; height: 60px;
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+            border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.7); cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); animation: floatAdvisor 3s ease-in-out infinite;
+        }
+        .floating-advisor-btn:hover { transform: scale(1.15) rotate(10deg); box-shadow: 0 15px 40px rgba(253, 224, 71, 0.9); }
+
+        .floating-rabahgpt-btn {
+            position: fixed; bottom: 2rem; left: 2rem; z-index: 900; width: 62px; height: 62px;
+            background: linear-gradient(135deg, #0d3b2e, #1f5e47, #d4af37);
+            border: 2px solid #d4af37; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.8); cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); animation: floatAdvisor 3s ease-in-out infinite; overflow: hidden;
+        }
+        .floating-rabahgpt-btn:hover { transform: scale(1.15) rotate(-10deg); box-shadow: 0 15px 40px rgba(253, 224, 71, 0.95); }
+        .floating-rabahgpt-btn img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+        @keyframes floatAdvisor {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .rabah-chat-container {
+            background: linear-gradient(145deg, #071410, #030a08);
+            border: 2px solid rgba(212, 175, 55, 0.4); border-radius: 2rem; padding: 1.5rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9); max-width: 750px; margin: 0 auto;
+        }
+        .rabah-message-user {
+            background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 1rem 1rem 0 1rem; padding: 1rem; color: #fde047; font-size: 13px; max-width: 80%;
+            margin-right: auto; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .rabah-message-ai {
+            background: rgba(15, 30, 24, 0.95); border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 1rem 1rem 1rem 0; padding: 1.25rem; color: #f4efea; font-size: 13px; line-height: 1.9;
+            max-width: 90%; margin-left: auto; margin-bottom: 1rem; box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        }
+
+        .advisor-card-option {
+            cursor: pointer; border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 1.25rem;
+            overflow: hidden; transition: all 0.3s ease; background: rgba(15, 30, 24, 0.8);
+            text-align: center; display: flex; flex-direction: column; align-items: center; padding: 12px;
+        }
+        .advisor-card-option:hover, .advisor-card-option.selected {
+            border-color: #d4af37; transform: scale(1.03); box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            background: rgba(212, 175, 55, 0.15);
+        }
+        .advisor-card-option img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 1rem; margin-bottom: 8px; }
+
+        button, select, input, label, a { position: relative; z-index: 25; cursor: pointer; }
+    </style>
+</head>
+<body class="dark-theme min-h-screen" id="html-root">
+
+    <canvas id="gold-particles-canvas"></canvas>
+
+    <div onclick="showAdvisorPage()" class="floating-advisor-btn" title="المستشار العطري للبحث">
+        <svg class="w-7 h-7 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+        </svg>
+    </div>
+
+    <div onclick="showRabahGptPage()" class="floating-rabahgpt-btn" title="مساعد الذكاء الاصطناعي Rabah-GPT">
+        <img src="advisor-icon.jpg" alt="Rabah-GPT" onerror="this.src='https://placehold.co/62x62/071410/d4af37?text=🤖'">
+    </div>
+
+    <header class="modern-header">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 grid grid-cols-3 items-center relative">
+            <div class="flex items-center gap-1.5 sm:gap-3 z-30 justify-start">
+                <button class="circle-icon-btn md:hidden" onclick="toggleMobileMenu(event)" title="القائمة">
+                    <div class="flex flex-col gap-1 items-center justify-center w-full">
+                        <span class="w-4 h-0.5 bg-amber-400 rounded-full"></span>
+                        <span class="w-4 h-0.5 bg-amber-400 rounded-full"></span>
+                        <span class="w-4 h-0.5 bg-amber-400 rounded-full"></span>
+                    </div>
+                </button>
+
+                <div id="mobile-dropdown-menu" class="mobile-menu-dropdown md:hidden">
+                    <a href="#" onclick="showDeveloperPage(); toggleMobileMenu(event); return false;" class="mobile-menu-item">
+                        <img src="developer-icon.jpg" alt="Developer" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=💻'">
+                        <span>مطور المنصة</span>
+                    </a>
+                    <a href="#" onclick="showBlogPage(); toggleMobileMenu(event); return false;" class="mobile-menu-item">
+                        <img src="articles-icon.jpg" alt="Articles" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=📰'">
+                        <span>مقالات</span>
+                    </a>
+                    <a href="#" onclick="showStoryPage(); toggleMobileMenu(event); return false;" class="mobile-menu-item">
+                        <img src="story-icon.jpg" alt="Story" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=✨'">
+                        <span>قصتنا</span>
+                    </a>
+                    <a href="#" onclick="showWishlistPage(); toggleMobileMenu(event); return false;" class="mobile-menu-item">
+                        <img src="wishlist-icon.jpg" alt="Wishlist" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=❤️'">
+                        <span>المفضلة</span>
+                    </a>
+                    <a href="https://www.instagram.com/amateurdeparfums/?hl=fr" target="_blank" class="mobile-menu-item">
+                        <img src="instagram-icon.jpg" alt="Instagram" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=IG'">
+                        <span>إنستغرام</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@amateur.de.parfums?_r=1&_t=ZS-9AdEputMyZT" target="_blank" class="mobile-menu-item">
+                        <img src="tiktok-icon.jpg" alt="TikTok" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=TT'">
+                        <span>تيك توك</span>
+                    </a>
+                    <a href="https://www.google.com/maps/place/Amateur+de+Parfums/@36.7903613,3.0539034,17z/data=!4m6!3m5!1s0x128fb30042cdf5d3:0xd1b7d8edef5992ea!8m2!3d36.7908768!4d3.0533509!16s%2Fg%2F11ysprjdyq?entry=ttu" target="_blank" class="mobile-menu-item">
+                        <img src="map-icon.jpg" alt="Map" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=MAP'">
+                        <span>موقعنا (الماب)</span>
+                    </a>
+                    <a href="https://t.me/+840gNQd2PmcyZTdk" target="_blank" class="mobile-menu-item">
+                        <img src="telegram-icon.jpg" alt="Telegram" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=💬'">
+                        <span>تليجرام</span>
+                    </a>
+                    <a href="#" id="mobile-whatsapp-link" target="_blank" class="mobile-menu-item">
+                        <img src="whatsapp-icon.jpg" alt="WhatsApp" onerror="this.src='https://placehold.co/30x30/071410/d4af37?text=WA'">
+                        <span>واتساب</span>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center gap-3">
+                    <button class="circle-icon-btn" onclick="showDeveloperPage()" title="مطور المنصة"><img src="developer-icon.jpg" alt="Developer" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=💻'"></button>
+                    <button class="circle-icon-btn" onclick="showBlogPage()" title="مقالات"><img src="articles-icon.jpg" alt="Articles" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=📰'"></button>
+                    <button class="circle-icon-btn" onclick="showStoryPage()" title="قصتنا"><img src="story-icon.jpg" alt="Story" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=✨'"></button>
+                    <button class="circle-icon-btn" onclick="showWishlistPage()" title="المفضلة"><img src="wishlist-icon.jpg" alt="Wishlist" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=❤️'"></button>
+                    <a href="https://www.instagram.com/amateurdeparfums/?hl=fr" target="_blank" class="circle-icon-btn" title="إنستغرام"><img src="instagram-icon.jpg" alt="Instagram" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=IG'"></a>
+                    <a href="https://www.tiktok.com/@amateur.de.parfums?_r=1&_t=ZS-9AdEputMyZT" target="_blank" class="circle-icon-btn" title="تيك توك"><img src="tiktok-icon.jpg" alt="TikTok" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=TT'"></a>
+                    <a href="https://www.google.com/maps/place/Amateur+de+Parfums/@36.7903613,3.0539034,17z/data=!4m6!3m5!1s0x128fb30042cdf5d3:0xd1b7d8edef5992ea!8m2!3d36.7908768!4d3.0533509!16s%2Fg%2F11ysprjdyq?entry=ttu" target="_blank" class="circle-icon-btn" title="موقعنا على الماب"><img src="map-icon.jpg" alt="Map" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=MAP'"></a>
+                    <a href="https://t.me/+840gNQd2PmcyZTdk" target="_blank" class="circle-icon-btn" title="تليجرام"><img src="telegram-icon.jpg" alt="Telegram" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=💬'"></a>
+                </div>
+
+                <button class="icon-mode-btn" onclick="toggleTheme()" title="تغيير المظهر"><span id="theme-icon">🌙</span></button>
+            </div>
+
+            <div class="text-center cursor-pointer flex flex-col items-center justify-center z-30 px-1 mx-auto" onclick="showHomePage()">
+                <div class="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 mb-1 sm:mb-2 rounded-full overflow-hidden border-2 border-amber-400 bg-black flex items-center justify-center shadow-2xl">
+                    <img src="LOGO.jpg" alt="Logo" class="h-full w-full object-cover" onerror="this.src='https://placehold.co/120x120/011c16/d4af37?text=AP'">
+                </div>
+                <div class="text-[10px] sm:text-xs md:text-sm font-black tracking-[0.15em] sm:tracking-[0.25em] uppercase pure-gold-text trajan-font whitespace-nowrap">AMATEUR DE PARFUMS</div>
+                <div class="hidden sm:block text-[7px] md:text-[9px] font-bold tracking-[0.2em] uppercase pure-gold-text mt-0.5 trajan-font">ADRESSE DE CONNAISSEUR</div>
+            </div>
+
+            <div class="flex items-center gap-1.5 sm:gap-3 z-30 justify-end">
+                <button id="admin-nav-btn" onclick="openAdminDashboard()" class="hidden royal-admin-icon-btn" title="لوحة التحكم الملكية">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </button>
+                
+                <button onclick="toggleAuthModal(true)" class="signin-custom-btn" title="تسجيل الدخول">
+                    <span class="signin-icon-circle" id="signin-icon-container">
+                        <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    </span>
+                    <span class="px-1 sm:px-2 truncate max-w-[70px] sm:max-w-none" id="signin-label">دخول</span>
+                </button>
+
+                <a id="custom-whatsapp-btn" href="#" target="_blank" class="circle-icon-btn hidden md:flex" title="WhatsApp">
+                    <img src="whatsapp-icon.jpg" alt="WhatsApp" onerror="this.src='https://placehold.co/42x42/071410/d4af37?text=WA'">
+                </a>
+
+                <button onclick="toggleCartDrawer(true)" class="relative royal-cart-icon-btn" title="السلة">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span id="cart-count-badge">0</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="border-t border-amber-500/20 py-2.5 px-4 sm:px-6 flex items-center justify-center text-xs tracking-widest uppercase font-medium font-sans relative z-30">
+            <div class="flex items-center gap-6 sm:gap-8 overflow-x-auto scrollbar-none">
+                <button onclick="switchMainTab('all', this)" class="main-tab-btn active text-amber-300 font-bold border-b-2 border-amber-400 pb-0.5 whitespace-nowrap">الكل</button>
+                <button onclick="switchMainTab('discounts', this)" class="main-tab-btn opacity-70 hover:opacity-100 transition whitespace-nowrap">التنزيلات 🔥</button>
+                <button onclick="switchMainTab('bestsellers', this)" class="main-tab-btn opacity-70 hover:opacity-100 transition whitespace-nowrap">الأكثر مبيعاً 👑</button>
+                <button onclick="switchMainTab('new', this)" class="main-tab-btn opacity-70 hover:opacity-100 transition whitespace-nowrap">الجديد 🌟</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="home-view" class="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-10 view-enter">
+        <section class="hero-slider-container mb-8 sm:mb-10 overflow-hidden relative shadow-2xl p-6 sm:p-10 md:p-16" id="hero-slider-box">
+            <div class="hero-slide active" style="background-image: url('shop1.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('shop2.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('shop3.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('shop4.jpg');"></div>
+            <div class="hero-slide" style="background-image: url('shop5.jpg');"></div>
+
+            <div class="relative z-10 max-w-xl text-right space-y-3 sm:space-y-4">
+                <span class="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-amber-300 font-mono block luxury-text-glow font-bold trajan-font">HAUTE PARFUMERIE ARTISANALE</span>
+                <h1 class="text-2xl sm:text-3xl md:text-5xl font-black pure-gold-text tracking-wide leading-tight luxury-text-glow trajan-font">اكتشف رحلتك العطرية الاستثنائية</h1>
+                <p class="text-xs sm:text-sm md:text-base text-amber-100 leading-relaxed font-bold luxury-text-glow">توليفات نادرة صُممت بعناية فائقة لتترك أثراً ساحراً لا يُمحى. جودة تنافس أرقى دور العطور العالمية.</p>
+            </div>
+        </section>
+
+        <section class="mb-12 sm:mb-16">
+            <div class="text-center mb-4 space-y-1">
+                <h3 class="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-amber-400 font-serif trajan-font">جولة حصرية داخل الورشة</h3>
+                <h2 class="text-base sm:text-lg md:text-xl font-bold pure-gold-text trajan-font">نبض الفخامة وصناعة العطور الحصرية</h2>
+            </div>
+            <div class="store-video-container" id="video-container-box">
+                <div class="store-video-wrapper">
+                    <video id="interactive-shop-video" muted playsinline preload="metadata">
+                        <source src="shop-video.mp4" type="video/mp4">
+                    </video>
+                    <div class="replay-btn-overlay" onclick="replayInteractiveVideo()">
+                        <div class="replay-icon" title="إعادة تشغيل">
+                            <svg class="w-7 h-7 sm:w-9 sm:h-9 fill-current" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12 sm:mb-16">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-6 sm:mb-8 pb-4 border-b border-amber-500/20 gap-4 font-sans relative z-30">
+                <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+                    <button onclick="filterCategory('all', this)" class="cat-filter active px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold bg-amber-500 text-black transition whitespace-nowrap">الكل</button>
+                    <button onclick="filterCategory('men', this)" class="cat-filter px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold luxury-btn transition whitespace-nowrap">رجالي</button>
+                    <button onclick="filterCategory('women', this)" class="cat-filter px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold luxury-btn transition whitespace-nowrap">نسائي</button>
+                    <button onclick="filterCategory('unisex', this)" class="cat-filter px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold luxury-btn transition whitespace-nowrap">للجنسين</button>
+                </div>
+                
+                <div class="relative w-full md:w-72">
+                    <input type="text" id="search-input" oninput="onLiveSearchInput()" placeholder="ابحث عن العطر أو الماركة..." class="w-full border border-amber-500/30 rounded-full px-4 py-2 text-xs bg-black/30 text-white focus:outline-none focus:border-amber-400 relative z-30">
+                    <div id="live-search-dropdown" class="live-search-dropdown"></div>
+                </div>
+            </div>
+
+            <div id="perfumes-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6"></div>
+            <div id="no-results" class="hidden text-center py-20 opacity-60 text-xs uppercase tracking-widest">عذراً، لا توجد عطور مطابقة.</div>
+        </section>
+    </main>
+
+    <!-- صفحة مطور المنصة -->
+    <main id="developer-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-6 sm:mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">💻 مطور المنصة</h2>
+            <button onclick="showHomePage()" class="royal-nav-btn text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2">← العودة للرئيسية</button>
+        </div>
+
+        <div class="luxury-card p-6 sm:p-12 md:p-16 rounded-3xl space-y-8 shadow-2xl text-center">
+            <div class="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden border-4 border-amber-400 bg-black mx-auto shadow-2xl">
+                <img src="developer-avatar.jpg" alt="Developer" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/320x320/011c16/d4af37?text=OSAMA+ZOBEIRI'">
+            </div>
+
+            <div class="space-y-2">
+                <h3 class="text-2xl sm:text-4xl font-black pure-gold-text trajan-font">أسامة زبيري (Osama Zobeiri)</h3>
+                <p class="text-xs sm:text-sm text-amber-300 font-mono tracking-widest uppercase">مهندس برمجيات ومطور المنصة الفخمة</p>
+            </div>
+
+            <div class="space-y-6 text-xs sm:text-sm md:text-base leading-relaxed text-justify opacity-95 max-w-3xl mx-auto">
+                <p class="font-bold text-amber-200 text-center text-sm sm:text-base">الملف التعريفي الفخري: العبقري المطور أسامة زبيري (Osama Zobeiri)</p>
+                <p>في عالم تتسابق فيه الحلول البرمجية التقليدية نحو التكرار والنمطية، يبرز اسم أسامة زبيري كعلامة فارقة وعقل مهندسي فريد يدمج بين دقة الخوارزميات وبريق الفخامة الفنية. إنه ليس مجرد مطور ويب ومبرمج محترف يجيد تطويع اللغات البرمجية المعقدة (HTML, Tailwind, Supabase, JavaScript وغيرها)، بل هو فنان رقمي يرى في كل سطر برمجى نبضاً حياً يخدم تجربة المستخدم ويصنع لها هالة استثنائية لا تُنسى.</p>
+                <p><b>1. الهوية التقنية والاحترافية المطلقة</b><br>ينحدر أسامة زبيري من بيئة أكاديمية متقدمة؛ فهو طالب في السنة الأولى التحضيرية في المدرسة العليا للتسيير والاقتصاد الرقمي (ESGEN) الواقعة في مدينة الكلية الساحرة بالجزائر. هذه الخلفية الفريدة التي تجمع بين "اقتصاد الرقميات" و"هندسة البرمجيات" منحت أسامة رؤية استراتيجية مذهلة تترجم الأفكار التجارية والمشاريع الكبرى إلى منصات رقمية جبارة تعمل بكفاءة متناهية وسرعة خارقة. سواء كان الأمر يتعلق ببناء ألعاب فيديو متكاملة باستخدام محرك الألعاب العالمي Godot 4، أو هندسة تطبيقات ومواقع تجارة إلكترونية فاخرة بمستويات أمان وسحابة رقمية متقدمة، فإن بصمة أسامة تتسم دائمًا بالإتقان المطلق، النظافة الكدية الهندسية، والابتعاد التام عن الحلول الجاهزة أو القوالب المكررة.</p>
+                <p><b>2. فلسفة التصميم والأداء الفائق</b><br>تؤمن فلسفة أسامة البرمجية بأن "التفاصيل الصغيرة هي التي تصنع الفارق الكبير". فعندما صمم وبنى واجهات متجر "عاشق العطور" (Amateur De Parfums)، لم يقتصر دوره على كتابة كود عابر، بل صاغ تجربة مستخدم (UX/UI) تلامس الحواس؛ بدءاً من دمج الجسيمات الذهبية المتساقطة بسلاسة بصرية تحبس الانفس، مروراً بتصميم زرين عائمين مستقلين ذكيين (للمستشار العطري وللمساعد الذكي المبتكر Rabah-GPT)، وصولاً إلى ربط الموقع بقاعدة بيانات سحابية حية (Supabase) تتيح للإدارة والتحكم الكامل بكل سلاسة وأمان تام. أسامة يرفض تماماً الحلول السطحية، ويصر دائمًا على أن يكون الكود نظيفاً، مستقراً، وقابلاً للتوسع المستقبلي بلا حدود.</p>
+                <p><b>3. الرؤية الإبداعية وروح الابتكار</b><br>إلى جانب براعته في البرمجة وتطوير الويب، يمتلك أسامة مخيلة خصبة تمتد عبر مجالات صناعة الألعاب، التصميم الرقمي باستخدام أداة Krita و Aseprite، وهندسة المشاريع التجارية الطموحة (مثل مشاريع المتاجر الإلكترونية، منصات الألعاب التفاعلية مثل "تجميعة"، وتطبيقات الهواتف الذكية مثل "تضاريس"). إن قدرته الفائقة على تحويل الأفكار المعقدة إلى حقيقة رقمية تفاعلية بلمسة واحدة تجعله مطوراً فريداً من نوعه ومصدر إلهام لكل من يتعامل معه.</p>
+                <p class="text-center font-bold text-amber-300">إن موقع "عاشق العطور" اليوم هو المرآة الحقيقية لهذا الإبداع التقني العالي، وتحفة فنية رقمية وُلدت بفضل الرؤية الهندسية واللمسة السحرية للمطور العبقري أسامة زبيري.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 pt-6 border-t border-amber-500/20">
+                <a href="https://www.instagram.com/osamo.9z0/?hl=fr" target="_blank" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg hover:scale-105 transition">📸 تابعني على إنستغرام</a>
+                <a href="https://wa.me/213554313493" target="_blank" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg hover:scale-105 transition">💬 تواصل معي عبر واتساب</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- صفحة المستشار العطري الأصلي -->
+    <main id="advisor-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-6">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">✨ المستشار العطري للبحث المخصص</h2>
+            <button onclick="showHomePage()" class="royal-nav-btn text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2">← الرئيسية</button>
+        </div>
+        <div class="luxury-card p-6 sm:p-10 rounded-3xl shadow-2xl space-y-6">
+            <div id="advisor-quiz-container"></div>
+        </div>
+    </main>
+
+    <!-- صفحة Rabah-GPT مع عرض 3 أسئلة عشوائية متجددة وتأثير الكتابة التلقائية -->
+    <main id="rabahgpt-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-6">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🤖</span>
+                <div>
+                    <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">Rabah-GPT | المساعد الذكي الملكي</h2>
+                    <p class="text-[10px] text-amber-300 opacity-80">اسألني أي شيء عن عطورنا وسأجيبك بالتفصيل</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div id="owner-rabah-settings-toggle" class="hidden">
+                    <button onclick="toggleOwnerRabahSettings()" class="bg-amber-500 text-black text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase shadow">⚙️ إعدادات الأسئلة</button>
+                </div>
+                <button onclick="showHomePage()" class="royal-nav-btn text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2">← الرئيسية</button>
+            </div>
+        </div>
+
+        <!-- لوحة تحكم الأونر -->
+        <div id="owner-rabah-settings-panel" class="luxury-card p-6 rounded-3xl mb-6 hidden space-y-4 text-xs border border-amber-400">
+            <h3 class="text-sm font-black pure-gold-text trajan-font">👑 إدارة وإضافة أسئلة Rabah-GPT</h3>
+            <form onsubmit="handleSaveRabahQuestion(event)" class="space-y-3">
+                <input type="hidden" id="edit-rabah-q-id">
+                <div>
+                    <label class="block font-bold text-amber-300 mb-1">السؤال المختصر:</label>
+                    <input type="text" id="rabah-q-text" required placeholder="مثال: كيف أختار عطري المناسب؟" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/50 text-white">
+                </div>
+                <div>
+                    <label class="block font-bold text-amber-300 mb-1">الإجابة المفصلة:</label>
+                    <textarea id="rabah-q-answer" required placeholder="اكتب الإجابة المفصلة هنا..." class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/50 text-white h-32"></textarea>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="royal-save-btn flex-1 py-2.5">حفظ السؤال</button>
+                    <button type="button" onclick="resetRabahForm()" class="luxury-btn px-4 py-2.5 rounded-xl font-bold">إلغاء</button>
+                </div>
+            </form>
+            <div class="pt-4 border-t border-amber-500/20">
+                <h4 class="font-bold text-amber-300 mb-2">الأسئلة الحالية:</h4>
+                <div id="owner-rabah-questions-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+
+        <div class="rabah-chat-container space-y-6">
+            <div id="rabah-chat-history" class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                <div class="rabah-message-ai">
+                    <b>أهلاً بك يا زائرنا الكريم في دار العطور الفاخرة Amateur De Parfums.</b><br>
+                    أنا <b>Rabah-GPT</b>، مساعدك الذكي للإجابة عن كل استفساراتك حول الفلسفة العطرية، الثبات، والتوصيل. اختر من الأسئلة أدناه أو اكتب سؤالك لنبدأ الحديث فوراً! ✨
+                </div>
+            </div>
+
+            <!-- عرض 3 أسئلة عشوائية متجددة فقط لتنظيف الواجهة -->
+            <div class="space-y-2 pt-2 border-t border-amber-500/20">
+                <span class="text-[11px] text-amber-400 uppercase tracking-widest block font-bold">💡 اختر سؤالاً (تتجدد عشوائياً تلقائياً):</span>
+                <div id="rabah-quick-questions" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5"></div>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <input type="text" id="rabah-user-input" onkeydown="if(event.key==='Enter') sendRabahMessage()" placeholder="اكتب سؤالك هنا..." class="flex-grow border border-amber-500/30 rounded-xl p-3 text-xs bg-black/60 text-white focus:outline-none focus:border-amber-400">
+                <button onclick="sendRabahMessage()" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-xl text-xs uppercase tracking-wider shadow">إرسال ⚡</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- صفحة قصتنا -->
+    <main id="story-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-6 sm:mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">قصتنا | فلسفة الفخامة والأصالة</h2>
+            <button onclick="showHomePage()" class="royal-nav-btn text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2">← العودة للرئيسية</button>
+        </div>
+        <div class="luxury-card p-4 sm:p-8 md:p-12 rounded-3xl space-y-6 sm:space-y-8 shadow-2xl">
+            <div class="story-slider-container mb-4 sm:mb-6">
+                <div class="story-slide active" style="background-image: url('story-workshop.jpg');"><img src="story-workshop.jpg" alt="Workshop"></div>
+                <div class="story-slide" style="background-image: url('story-ingredients.jpg');"><img src="story-ingredients.jpg" alt="Ingredients"></div>
+                <div class="story-slide" style="background-image: url('story-bottle-creation.jpg');"><img src="story-bottle-creation.jpg" alt="Creation"></div>
+            </div>
+            <div class="space-y-4 sm:space-y-6 text-xs sm:text-sm md:text-base leading-relaxed text-justify opacity-95">
+                <h3 class="text-xl sm:text-2xl md:text-3xl font-black pure-gold-text trajan-font text-center mb-4 sm:mb-6">شغف متأصل.. حكاية عطر يخلد اللحظات</h3>
+                <p>في تلك الزاوية المنسية من الزمن، حيث يلتقي عبق التاريخ العريق بسحر الطبيعة البكر في مدينة الكلية الساحرة على أرض الجزائر الأبية، وُلدت حكاية تجاوزت كونها مجرد تجارة عطور، لتصبح ملحمة حسية وفنية تُعنى بتخليد اللحظات عبر أثير الروائح. تعود جذور حكاية "Amateur De Parfums" إلى شغف عميق وجامح استوطن روح مؤسسها الشاب، الذي نظر إلى عالم العطور لا باعتباره مجرد سوائل كيميائية تُباع في قوارير زجاجية، بل كبوابة خفية تعبر بنا نحو أبعاد الذاكرة، والمشاعر الدفينة، والهوية الشخصية التي لا تُنسى.</p>
+                <p>بدأت الفكرة في ورشة صغيرة متواضعة، لكنها كانت تغلي بالأفكار والطموحات الكبرى. كان الهاجس الأساسي هو كسر طوق النمطية والحلول التجارية الجاهزة التي تسيطر على الأسواق، وتقديم مفهوم جديد كلياً يُعرف عالمياً بـ "الحرافة العطرية" (Haute Parfumerie Artisanale). في هذه الورشة، بدأ المؤسس رحلة بحث مضنية استمرت لأشهر طويلة بين أمهات الكتب العطرية القديمة، واستكشاف أسرار استخلاص الزيوت الطبيعية النقية. لم يكن الهدف هو إنتاج عطر يشبه غيره، بل صياغة "توقيع شخصي" فريد يتحدث نيابة عن مرتديه قبل أن ينطق بكلمة واحدة.</p>
+                <p>عبر سنوات من التجربة والخطأ، والتفاعل المستمر مع أدق تفاصيل الكيمياء العطرية، تطورت الورشة الصغيرة لتصبح منصة رقمية وورشة ملكية متكاملة تنافس أرقى دور العطور العالمية. لقد تم اختيار المكونات الخام بعناية فائقة؛ فمن قطرات العود المعتقة القادمة من أعماق الأدغال والتي تحمل عبق التاريخ والوقار، إلى أخشاب الصندل الملكية الدافئة، وصولاً إلى نفحات زهور الياسمين والورد البلدي التي تُقطف يدويًا وفجر كل يوم قبل أن تتبخر قطرات الندى من عليها. هذا الحرص المطلق على جودة المواد الأولية هو السر الكامنة وراء الثبات الطولي الاستثنائي والفوحان الساحر الذي يميز كل زجاجة تحمل علامة "Amateur De Parfums".</p>
+                <p>ولم يقتصر الإبداع على الجانب العطري فحسب، بل امتد ليتغلغل في كل تفاصيل التجربة الرقمية والبصرية للمتجر. بفضل الرؤية الهندسية العبقرية والتطوير البرمجي المتقدم للمطور أسامة زبيري، تم تحويل المتجر إلى تحفة رقمية تفاعلية نابضة بالحياة. دمج الجسيمات الذهبية المتساقطة بسلاسة بصرية تحبس الانفس، وتصميم نظام البحث الذكي (المستشار العطري)، وابتكار المساعد الرقمي الشخصي "Rabah-GPT"؛ كلها عناصر تكاتفت لتصنع بيئة تسوق فريدة تدمج بين دفء العطور الكلاسيكية وبريق التكنولوجيا الحديثة.</p>
+                <p class="text-center font-bold text-amber-300">إن رحلة "عاشق العطور" لم تكن مجرد رحلة لبناء متجر تجاري، بل هي التزام أبدي بالتميز، وعهد قطعه المؤسس والمطور بأن تظل كل زجاجة غادرت الورشة تحفة فنية متفردة تروي حكاية صاحبها بكل فخر وأصالة. شكراً لكونكم جزءاً من هذه الملحمة العطرية المستمرة، ودمتم دائماً عنواناً للذوق الرفيع.</p>
+            </div>
+        </div>
+    </main>
+
+    <main id="wishlist-view" class="max-w-5xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-6 sm:mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">قائمة العطور المفضلة ❤️</h2>
+            <button onclick="showHomePage()" class="royal-nav-btn text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2">← العودة للرئيسية</button>
+        </div>
+        <div id="wishlist-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6"></div>
+    </main>
+
+    <main id="admin-view" class="max-w-6xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-amber-500/20 pb-4 mb-8 gap-3">
+            <div class="flex items-center gap-3">
+                <span class="bg-amber-500 text-black text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider shadow">👑 لوحة تحكم الآونر</span>
+                <span class="text-xs text-amber-300 hidden sm:inline">أهلاً بك يا مؤسس المتجر، أدر عطورك ومقالاتك بكل احترافية</span>
+            </div>
+            <button onclick="showHomePage()" class="royal-nav-btn text-xs px-4 py-2">← العودة للرئيسية</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mt-6">
+            <div onclick="openAddPerfumePage()" class="admin-image-card" style="background-image: url('admin-add-perfume.jpg');"><div class="admin-card-content"><h3 class="text-2xl sm:text-3xl font-bold pure-gold-text arabic-royal-font drop-shadow-2xl">إضافة عطر جديد</h3></div></div>
+            <div onclick="openAddArticlePage()" class="admin-image-card" style="background-image: url('admin-write-article.jpg');"><div class="admin-card-content"><h3 class="text-2xl sm:text-3xl font-bold pure-gold-text arabic-royal-font drop-shadow-2xl">كتابة مقال جديد</h3></div></div>
+            <div onclick="openEditPerfumesList()" class="admin-image-card" style="background-image: url('admin-edit-perfumes.jpg');"><div class="admin-card-content"><h3 class="text-2xl sm:text-3xl font-bold pure-gold-text arabic-royal-font drop-shadow-2xl">التعديل على العطور</h3></div></div>
+        </div>
+    </main>
+
+    <!-- خانات فارغة تماماً عند إضافة عطر جديد -->
+    <main id="admin-add-perfume-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">إضافة عطر جديد للتشكيلة</h2>
+            <button onclick="openAdminDashboard()" class="royal-nav-btn text-xs px-4 py-2">← العودة للوحة التحكم</button>
+        </div>
+        <form onsubmit="handleSaveNewPerfume(event)" class="luxury-card p-4 sm:p-8 rounded-3xl space-y-6 text-xs">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div><label class="block font-bold mb-2 text-amber-300">اسم العطر</label><input type="text" id="p-name" required placeholder="أدخل اسم العطر..." class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+                <div><label class="block font-bold mb-2 text-amber-300">الماركة</label><input type="text" id="p-brand" required placeholder="أدخل اسم الماركة..." class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div><label class="block font-bold mb-2 text-amber-300">تصنيف العطر</label><select id="p-cat" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black text-white"><option value="men">رجالي</option><option value="women">نسائي</option><option value="unisex">للجنسين</option></select></div>
+                <div><label class="block font-bold mb-2 text-amber-300">طبيعة العطر</label><select id="p-nature" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black text-white"><option value="Designer">Designer</option><option value="Niche">Niche</option></select></div>
+            </div>
+            <div class="border border-amber-500/30 p-4 rounded-2xl space-y-3 bg-black/30">
+                <label class="block font-bold mb-2 text-amber-300">حالة العطر:</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="p-status-box" value="new" class="accent-amber-500 w-4 h-4"> جديد 🌟</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="p-status-box" value="bestseller" class="accent-amber-500 w-4 h-4"> الأكثر مبيعا 👑</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="p-status-box" value="discount" class="accent-amber-500 w-4 h-4"> ضمن التنزيلات 🔥</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="p-status-box" value="out" class="accent-amber-500 w-4 h-4"> منتهي ⛔</label>
+                </div>
+            </div>
+            <div><label class="block font-bold mb-2 text-amber-300">نكهة العطر</label><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-[11px]" id="add-notes-container"></div></div>
+            <div class="border border-amber-500/30 p-4 rounded-2xl space-y-3 bg-black/30"><label class="block font-bold text-amber-300 text-sm">مستويات الجودة المتاحة:</label><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3" id="add-grades-container"></div></div>
+            <div><label class="block font-bold mb-2 text-amber-300">الفصول المناسبة</label><select id="p-season" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black text-white"><option value="طوال السنة">طوال السنة 🌿</option><option value="صيفي">صيفي ☀️</option><option value="شتوي">شتوي ❄️</option><option value="ربيعي">ربيعي 🌸</option><option value="خريفي">خريفي 🍂</option></select></div>
+            <div class="space-y-3"><label class="block font-bold mb-2 text-amber-300">صور العطر (من 3 إلى 5 روابط)</label><input type="url" id="p-img-1" placeholder="رابط الصورة الأولى" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="p-img-2" placeholder="رابط الصورة الثانية" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="p-img-3" placeholder="رابط الصورة الثالثة" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="p-img-4" placeholder="رابط الصورة الرابعة" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="p-img-5" placeholder="رابط الصورة الخامسة" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            <div><label class="block font-bold mb-2 text-amber-300">وصف العطر</label><textarea id="p-desc" placeholder="اكتب وصفاً ساحراً..." class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white h-32"></textarea></div>
+            <div class="pt-4"><button type="submit" class="royal-save-btn">احفظ العطر</button></div>
+        </form>
+    </main>
+
+    <main id="admin-edit-list-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-6 gap-4">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">اختر العطر المراد تعديله</h2>
+            <button onclick="openAdminDashboard()" class="royal-nav-btn text-xs px-4 py-2 whitespace-nowrap">← العودة للوحة التحكم</button>
+        </div>
+        <div class="mb-6"><input type="text" id="admin-search-perfume" oninput="filterAdminPerfumesList()" placeholder="ابحث عن اسم العطر..." class="w-full border border-amber-500/30 rounded-full px-5 py-3 text-xs bg-black/40 text-white focus:outline-none focus:border-amber-400"></div>
+        <div id="edit-perfumes-container" class="space-y-4"></div>
+    </main>
+
+    <!-- عند التعديل تظهر المعلومات السابقة -->
+    <main id="admin-edit-perfume-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">تعديل بيانات العطر الملكي</h2>
+            <button onclick="openEditPerfumesList()" class="royal-nav-btn text-xs px-4 py-2">← العودة للقائمة</button>
+        </div>
+        <form onsubmit="handleSaveEditedPerfume(event)" class="luxury-card p-4 sm:p-8 rounded-3xl space-y-6 text-xs">
+            <input type="hidden" id="edit-p-id">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div><label class="block font-bold mb-2 text-amber-300">اسم العطر</label><input type="text" id="edit-p-name" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+                <div><label class="block font-bold mb-2 text-amber-300">الماركة</label><input type="text" id="edit-p-brand" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div><label class="block font-bold mb-2 text-amber-300">تصنيف العطر</label><select id="edit-p-cat" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black text-white"><option value="men">رجالي</option><option value="women">نسائي</option><option value="unisex">للجنسين</option></select></div>
+                <div><label class="block font-bold mb-2 text-amber-300">طبيعة العطر</label><select id="edit-p-nature" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black text-white"><option value="Designer">Designer</option><option value="Niche">Niche</option></select></div>
+            </div>
+            <div class="border border-amber-500/30 p-4 rounded-2xl space-y-3 bg-black/30">
+                <label class="block font-bold mb-2 text-amber-300">حالة العطر:</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="edit-p-status-box" value="new" class="accent-amber-500 w-4 h-4"> جديد 🌟</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="edit-p-status-box" value="bestseller" class="accent-amber-500 w-4 h-4"> الأكثر مبيعا 👑</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="edit-p-status-box" value="discount" class="accent-amber-500 w-4 h-4"> ضمن التنزيلات 🔥</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="edit-p-status-box" value="out" class="accent-amber-500 w-4 h-4"> منتهي ⛔</label>
+                </div>
+            </div>
+            <div><label class="block font-bold mb-2 text-amber-300">نكهة العطر</label><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-[11px]" id="edit-notes-container"></div></div>
+            <div class="border border-amber-500/30 p-4 rounded-2xl space-y-3 bg-black/30"><label class="block font-bold text-amber-300 text-sm">مستويات الجودة المتاحة:</label><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3" id="edit-grades-container"></div></div>
+            <div><label class="block font-bold mb-2 text-amber-300">الفصول المناسبة</label><select id="edit-p-season" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black text-white"><option value="طوال السنة">طوال السنة 🌿</option><option value="صيفي">صيفي ☀️</option><option value="شتوي">شتوي ❄️</option><option value="ربيعي">ربيعي 🌸</option><option value="خريفي">خريفي 🍂</option></select></div>
+            <div class="space-y-3"><label class="block font-bold mb-2 text-amber-300">صور العطر (من 3 إلى 5 روابط)</label><input type="url" id="edit-p-img-1" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-p-img-2" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-p-img-3" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-p-img-4" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-p-img-5" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            <div><label class="block font-bold mb-2 text-amber-300">وصف العطر</label><textarea id="edit-p-desc" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white h-32"></textarea></div>
+            <div class="pt-4"><button type="submit" class="royal-save-btn">احفظ التغييرات</button></div>
+        </form>
+    </main>
+
+    <main id="admin-add-article-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">كتابة مقال عطري جديد</h2>
+            <button onclick="openAdminDashboard()" class="royal-nav-btn text-xs px-4 py-2">← العودة للوحة التحكم</button>
+        </div>
+        <form onsubmit="handleSaveNewArticle(event)" class="luxury-card p-4 sm:p-8 rounded-3xl space-y-6 text-xs">
+            <div><label class="block font-bold mb-2 text-amber-300">عنوان المقال</label><input type="text" id="article-title" required placeholder="أدخل عنوان المقال..." class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            <div><label class="block font-bold mb-2 text-amber-300">محتوى المقال</label><textarea id="article-content" required placeholder="اكتب محتوى المقال الحصري..." class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white h-40"></textarea></div>
+            <div class="space-y-3"><label class="block font-bold text-amber-300">صور المقال (من 3 إلى 5 صور)</label><input type="url" id="article-img-1" required placeholder="رابط الصورة الأولى" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="article-img-2" required placeholder="رابط الصورة الثانية" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="article-img-3" required placeholder="رابط الصورة الثالثة" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="article-img-4" placeholder="رابط الصورة الرابعة" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="article-img-5" placeholder="رابط الصورة الخامسة" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4"><button type="submit" class="royal-save-btn">حفظ المقال</button><button type="button" onclick="openManageArticlesList()" class="royal-nav-btn">تصفح مقالاتي</button></div>
+        </form>
+    </main>
+
+    <main id="admin-manage-articles-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">إدارة وتصفح المقالات السابقة</h2>
+            <button onclick="openAddArticlePage()" class="royal-nav-btn text-xs px-4 py-2">← كتابة مقال جديد</button>
+        </div>
+        <div id="manage-articles-container" class="space-y-4"></div>
+    </main>
+
+    <main id="admin-edit-article-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-8">
+            <h2 class="text-base sm:text-xl font-bold pure-gold-text trajan-font">تعديل المقال الحصري</h2>
+            <button onclick="openManageArticlesList()" class="royal-nav-btn text-xs px-4 py-2">← العودة لقائمة المقالات</button>
+        </div>
+        <form onsubmit="handleSaveEditedArticle(event)" class="luxury-card p-4 sm:p-8 rounded-3xl space-y-6 text-xs">
+            <input type="hidden" id="edit-article-id">
+            <div><label class="block font-bold mb-2 text-amber-300">عنوان المقال</label><input type="text" id="edit-article-title" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            <div><label class="block font-bold mb-2 text-amber-300">محتوى المقال</label><textarea id="edit-article-content" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white h-40"></textarea></div>
+            <div class="space-y-3"><label class="block font-bold text-amber-300">صور المقال (من 3 إلى 5 روابط)</label><input type="url" id="edit-article-img-1" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-article-img-2" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-article-img-3" required class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-article-img-4" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"><input type="url" id="edit-article-img-5" class="w-full border border-amber-500/30 rounded-xl p-3 bg-black/40 text-white"></div>
+            <div class="pt-4"><button type="submit" class="royal-save-btn">احفظ التغييرات</button></div>
+        </form>
+    </main>
+
+    <!-- صفحة تفاصيل العطر -->
+    <main id="product-detail-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter">
+        <div class="mb-6 flex justify-between items-center font-sans">
+            <button onclick="showHomePage()" class="text-xs luxury-btn px-4 py-2 rounded-full uppercase tracking-wider font-bold">← العودة للتشكيلة</button>
+            <button onclick="scrollToReviewSection()" class="bg-amber-500 hover:bg-amber-400 text-black px-4 py-2 rounded-full text-xs font-bold shadow">💬 آراء الزوار</button>
+        </div>
+
+        <div class="luxury-card p-4 sm:p-6 md:p-10 rounded-2xl shadow-2xl space-y-8 font-sans">
+            <div class="flex flex-col md:flex-row gap-6 md:gap-8 items-center border-b border-amber-500/20 pb-8">
+                <div class="w-48 h-48 sm:w-56 sm:h-56 rounded-xl overflow-hidden bg-black flex items-center justify-center p-2 relative border border-amber-500/40 shadow-inner">
+                    <div class="detail-slider-container" id="detail-slider-wrapper"></div>
+                </div>
+                <div class="text-center md:text-right space-y-3 flex-grow">
+                    <h2 id="detail-perfume-name" class="text-xl sm:text-2xl md:text-4xl font-black pure-gold-text trajan-font"></h2>
+                    <p id="detail-perfume-brand" class="text-xs text-amber-400 font-mono tracking-widest uppercase"></p>
+                    <p id="detail-perfume-desc" class="text-xs md:text-sm opacity-90 leading-relaxed font-light max-w-xl"></p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between py-2 border-b border-amber-500/20 overflow-x-auto gap-2">
+                <div class="flex items-center gap-3">
+                    <button onclick="handleLikePerfume()" class="luxury-btn px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 whitespace-nowrap">👍 أعجبني <span id="like-count">0</span></button>
+                    <button onclick="handleDislikePerfume()" class="luxury-btn px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 whitespace-nowrap">👎 لا يعجبني <span id="dislike-count">0</span></button>
+                    <button onclick="toggleWishlistCurrentItem()" id="detail-wishlist-btn" class="luxury-btn px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 whitespace-nowrap">❤️ أضف للمفضلة</button>
+                </div>
+
+                <div id="grades-selection-wrapper" class="hidden">
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="grade-toggle-btn" onclick="cyclePerfumeGrade()" class="w-12 h-12 rounded-full bg-black/80 border-2 border-amber-400 text-amber-300 font-black text-xs shadow-xl flex items-center justify-center hover:scale-110 hover:bg-amber-400 hover:text-black transition duration-300" title="انقر لتبديل الجودة">
+                            <span id="current-grade-label">X1</span>
+                        </button>
+                        <input type="hidden" id="selected-grade-input" value="1">
+                    </div>
+                </div>
+            </div>
+
+            <form id="product-order-form" class="space-y-6 text-xs">
+                <div>
+                    <label class="block font-bold mb-3 text-amber-300 uppercase tracking-widest text-[11px]">اختر سعة القارورة الفاخرة:</label>
+                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
+                        <label class="luxury-card p-2 sm:p-3 text-center cursor-pointer block rounded-xl"><input type="radio" name="bottle_size" value="15ml" checked onchange="updateSelectedPrice()" class="hidden peer"><div class="peer-checked:ring-2 peer-checked:ring-amber-400 rounded-lg p-1.5"><span class="block font-bold text-sm bottle-unit" data-unit="15">15 مل</span><span class="text-[10px] text-amber-300 font-mono">300 دج</span></div></label>
+                        <label class="luxury-card p-2 sm:p-3 text-center cursor-pointer block rounded-xl"><input type="radio" name="bottle_size" value="20ml" onchange="updateSelectedPrice()" class="hidden peer"><div class="peer-checked:ring-2 peer-checked:ring-amber-400 rounded-lg p-1.5"><span class="block font-bold text-sm bottle-unit" data-unit="20">20 مل</span><span class="text-[10px] text-amber-300 font-mono">400 دج</span></div></label>
+                        <label class="luxury-card p-2 sm:p-3 text-center cursor-pointer block rounded-xl"><input type="radio" name="bottle_size" value="25ml" onchange="updateSelectedPrice()" class="hidden peer"><div class="peer-checked:ring-2 peer-checked:ring-amber-400 rounded-lg p-1.5"><span class="block font-bold text-sm bottle-unit" data-unit="25">25 مل</span><span class="text-[10px] text-amber-300 font-mono">500 دج</span></div></label>
+                        <label class="luxury-card p-2 sm:p-3 text-center cursor-pointer block rounded-xl"><input type="radio" name="bottle_size" value="30ml" onchange="updateSelectedPrice()" class="hidden peer"><div class="peer-checked:ring-2 peer-checked:ring-amber-400 rounded-lg p-1.5"><span class="block font-bold text-sm bottle-unit" data-unit="30">30 مل</span><span class="text-[10px] text-amber-300 font-mono">600 دج</span></div></label>
+                        <label class="luxury-card p-2 sm:p-3 text-center cursor-pointer block rounded-xl"><input type="radio" name="bottle_size" value="50ml" onchange="updateSelectedPrice()" class="hidden peer"><div class="peer-checked:ring-2 peer-checked:ring-amber-400 rounded-lg p-1.5"><span class="block font-bold text-sm bottle-unit" data-unit="50">50 مل</span><span class="text-[10px] text-amber-300 font-mono">800 دج</span></div></label>
+                        <label class="luxury-card p-2 sm:p-3 text-center cursor-pointer block rounded-xl"><input type="radio" name="bottle_size" value="80ml" onchange="updateSelectedPrice()" class="hidden peer"><div class="peer-checked:ring-2 peer-checked:ring-amber-400 rounded-lg p-1.5"><span class="block font-bold text-sm bottle-unit" data-unit="80">80 مل</span><span class="text-[10px] text-amber-300 font-mono">1000 دج</span></div></label>
+                        <label class="luxury-card p-2 sm:p-3 text-center cursor-pointer block rounded-xl"><input type="radio" name="bottle_size" value="100ml" onchange="updateSelectedPrice()" class="hidden peer"><div class="peer-checked:ring-2 peer-checked:ring-amber-400 rounded-lg p-1.5"><span class="block font-bold text-sm bottle-unit" data-unit="100">100 مل</span><span class="text-[10px] text-amber-300 font-mono">1400 دج</span></div></label>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between pt-4 border-t border-amber-500/20 gap-4">
+                    <div>
+                        <span class="block text-[10px] uppercase tracking-wider opacity-70">السعر الكلي:</span>
+                        <span class="text-xl md:text-2xl font-black text-amber-400 font-mono"><span id="selected-perfume-price">300</span> دج</span>
+                    </div>
+                    <div class="flex gap-2 sm:gap-3 w-full sm:w-auto">
+                        <button type="button" onclick="addToCartCurrentItem()" class="flex-1 sm:flex-none px-4 sm:px-6 py-3 luxury-btn font-bold rounded-xl uppercase tracking-wider shadow">أضف للسلة 🛍️</button>
+                        <button type="button" onclick="buyNowCurrentItem()" class="flex-1 sm:flex-none px-6 sm:px-8 py-3 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-xl uppercase tracking-wider shadow-lg">اطلب الآن ⚡</button>
+                    </div>
+                </div>
+            </form>
+
+            <div id="perfume-review-section" class="mt-8 pt-6 border-t border-amber-500/20 space-y-4">
+                <h3 class="text-xs font-bold text-amber-300 uppercase tracking-widest trajan-font">💬 آراء وتقييمات الزوار:</h3>
+                <div id="perfume-reviews-list" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+                <div class="flex gap-2">
+                    <input type="text" id="perfume-review-text" placeholder="اكتب رأيك العطري هنا..." class="flex-grow border border-amber-500/30 rounded-xl p-3 text-xs bg-black/40 text-white focus:outline-none focus:border-amber-400">
+                    <button onclick="submitPerfumeReview()" class="px-5 py-3 luxury-btn text-xs font-bold rounded-xl uppercase">إرسال</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="blog-view" class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 hidden view-enter font-sans">
+        <div class="flex items-center justify-between border-b border-amber-500/20 pb-4 mb-8">
+            <h2 class="text-base sm:text-lg font-black uppercase tracking-widest text-amber-300 trajan-font">📰 مقالات عطرية حصرية</h2>
+            <button onclick="showHomePage()" class="text-xs luxury-btn px-4 py-2 rounded-full uppercase">← العودة</button>
+        </div>
+        <div id="articles-feed-container" class="space-y-10"></div>
+    </main>
+
+    <!-- سلة المشتريات وخانة الطلب بتصميم 2x2 وعرض الصور والتكلفة الإجمالية -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden font-sans">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
+        <div class="fixed inset-y-0 left-0 max-w-full flex">
+            <div class="w-screen max-w-md luxury-card p-5 sm:p-7 flex flex-col justify-between relative z-50 shadow-2xl bg-[#071410] border-r border-amber-500/30 overflow-y-auto">
+                <div>
+                    <div class="flex items-center justify-between border-b border-amber-500/20 pb-3 mb-4">
+                        <h3 class="text-sm font-black uppercase tracking-widest text-amber-300 trajan-font">سلة المشتريات 🛍️</h3>
+                        <button onclick="toggleCartDrawer(false)" class="text-amber-300 text-lg font-bold hover:scale-110 transition">✕</button>
+                    </div>
+                    <div id="cart-items-container" class="space-y-2.5 mb-3 max-h-44 overflow-y-auto pr-1"></div>
+                    
+                    <div id="cart-total-section" class="luxury-card p-3 rounded-xl flex items-center justify-between text-xs mb-4 border border-amber-400/50 bg-black/50">
+                        <span class="font-black text-amber-300 trajan-font uppercase">التكلفة الاجمالية لكل شيء:</span>
+                        <span id="cart-total-amount" class="font-mono font-bold text-amber-400 text-sm">0 دج</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5 border-t border-amber-500/20 pt-3 text-xs">
+                    <h4 class="font-bold text-amber-300 uppercase tracking-wider trajan-font text-center text-[11px]">✨ استمارة اتمام الطلب الفاخرة</h4>
+                    
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block font-bold text-amber-200 mb-1 text-[10px]">الاسم واللقب:</label>
+                            <input type="text" id="order-fullname" placeholder="الاسم الكامل..." class="w-full border border-amber-500/30 rounded-xl p-2 bg-black/50 text-white text-[11px] focus:outline-none focus:border-amber-400">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-amber-200 mb-1 text-[10px]">رقم الهاتف:</label>
+                            <input type="tel" id="order-phone" placeholder="07xxxxxxxx" class="w-full border border-amber-500/30 rounded-xl p-2 bg-black/50 text-white text-[11px] focus:outline-none focus:border-amber-400">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-amber-200 mb-1 text-[10px]">الولاية:</label>
+                            <select id="order-wilaya" class="w-full border border-amber-500/30 rounded-xl p-2 bg-black text-white text-[11px] focus:outline-none focus:border-amber-400">
+                                <option value="">-- اختر ولايتك --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-amber-200 mb-1 text-[10px]">العنوان التفصيلي:</label>
+                            <input type="text" id="order-address" placeholder="البلدية والحي..." class="w-full border border-amber-500/30 rounded-xl p-2 bg-black/50 text-white text-[11px] focus:outline-none focus:border-amber-400">
+                        </div>
+                    </div>
+
+                    <button onclick="submitRoyalOrder()" class="royal-save-btn w-full py-2.5 mt-1 tracking-wider text-xs">اطلب الان ⚡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة رسالة الشكر المطلوبة -->
+    <div id="order-success-modal" class="modal-overlay">
+        <div class="modal-box text-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-amber-500/20 border-2 border-amber-400 text-amber-300 text-3xl flex items-center justify-center mx-auto shadow-lg">✓</div>
+            <h3 class="text-lg font-black pure-gold-text trajan-font">شكراً لتسوقك معنا</h3>
+            <p id="order-success-msg" class="text-xs leading-relaxed text-amber-100 font-light"></p>
+            <button onclick="closeOrderSuccessModal()" class="royal-save-btn w-full py-3 mt-4">تم، شكراً لك ✨</button>
+        </div>
+    </div>
+
+    <!-- نافذة تسجيل الدخول -->
+    <div id="auth-modal" class="modal-overlay" onclick="if(event.target === this) toggleAuthModal(false)">
+        <div class="modal-box relative">
+            <button onclick="toggleAuthModal(false)" class="absolute top-4 left-4 text-amber-300 text-lg font-bold hover:scale-110 transition">✕</button>
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-black pure-gold-text trajan-font mb-1" id="auth-modal-title">تسجيل الدخول</h3>
+                <p class="text-xs opacity-75">أدخل بيانات حسابك الفاخر</p>
+            </div>
+            
+            <form id="login-form" onsubmit="handleUserLogin(event)" class="space-y-4 text-xs">
+                <div><input type="email" id="login-email" required placeholder="البريد الإلكتروني" class="w-full border border-amber-500/30 rounded-xl p-3.5 bg-black/40 text-white"></div>
+                <div><input type="password" id="login-password" required minlength="8" maxlength="16" placeholder="كلمة المرور" class="w-full border border-amber-500/30 rounded-xl p-3.5 bg-black/40 text-white"></div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-extrabold rounded-xl uppercase tracking-wider shadow-lg transition text-sm">تسجيل الدخول</button>
+                <div class="pt-4 border-t border-amber-500/20 text-center"><button type="button" onclick="showRegisterView(event)" class="w-full py-3 bg-transparent border border-amber-400 text-amber-300 hover:bg-amber-400 hover:text-black font-extrabold rounded-xl uppercase tracking-wider transition text-xs">لا أملك حساباً بعد</button></div>
+            </form>
+
+            <form id="register-form" onsubmit="handleRegisterSubmit(event)" class="space-y-4 text-xs hidden">
+                <div><input type="text" id="reg-name" required placeholder="اسم المستخدم" class="w-full border border-amber-500/30 rounded-xl p-3.5 bg-black/40 text-white"></div>
+                <div><input type="email" id="reg-email" required placeholder="البريد الإلكتروني" class="w-full border border-amber-500/30 rounded-xl p-3.5 bg-black/40 text-white"></div>
+                <div><input type="password" id="reg-password" required minlength="8" maxlength="16" placeholder="كلمة المرور (8-16)" class="w-full border border-amber-500/30 rounded-xl p-3.5 bg-black/40 text-white"></div>
+                <div><input type="password" id="reg-confirm-password" required minlength="8" maxlength="16" placeholder="تأكيد كلمة المرور" class="w-full border border-amber-500/30 rounded-xl p-3.5 bg-black/40 text-white"></div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-extrabold rounded-xl uppercase tracking-wider shadow-lg transition text-sm">إنشاء حساب جديد</button>
+                <div class="text-center pt-2"><a href="#" onclick="backToLoginView(event)" class="text-amber-300 hover:underline text-[11px]">← لدي حساب بالفعل</a></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-[#071410]/95 border border-amber-400 text-amber-300 px-6 py-3 rounded-2xl font-bold shadow-2xl backdrop-blur-md transition-all transform translate-y-20 opacity-0 text-xs uppercase tracking-wider font-sans flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+        <span id="toast-msg">تمت العملية بنجاح ✨</span>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gold-particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class GoldParticle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 3 + 1; this.speedY = Math.random() * 1.2 + 0.4;
+                this.speedX = (Math.random() - 0.5) * 0.8; this.opacity = Math.random() * 0.8 + 0.2;
+                this.shape = Math.random() > 0.4 ? 'circle' : 'star';
+            }
+            update() { this.y += this.speedY; this.x += this.speedX; if (this.y > canvas.height) this.reset(); }
+            draw() {
+                ctx.save(); ctx.globalAlpha = this.opacity; ctx.fillStyle = '#d4af37';
+                ctx.shadowBlur = 12; ctx.shadowColor = '#fef08a';
+                if (this.shape === 'circle') { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+                else { ctx.fillRect(this.x, this.y, this.size * 1.8, this.size * 1.8); }
+                ctx.restore();
+            }
+        }
+        for (let i = 0; i < 120; i++) particles.push(new GoldParticle());
+        function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+        animateParticles();
+
+        const WHATSAPP_CONFIG = { phoneNumber: "213770771415", defaultMessage: "السلام عليكم، أريد الاستفسار عن عطوركم الفاخرة." };
+        const SUPABASE_URL = "https://zdzdbdixarwgubvzsfaw.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_KT6QH-AUaljl0VLviyIqXw_F8ERvIwR";
+        const supabaseClient = (typeof supabase !== 'undefined' && SUPABASE_URL.includes("http")) ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        
+        const OWNER_CREDENTIALS = { email: "amateurdeparfums2026@gmail.com", password: "amateur2026" };
+
+        const algeriaWilayas = [
+            "01. أدرار", "02. الشلف", "03. الأغواط", "04. أم البواقي", "05. باتنة", "06. بجاية", "07. بسكرة", "08. بشار", "09. البليدة", "10. البويرة",
+            "11. تمنراست", "12. تبسة", "13. تلمسان", "14. تيارت", "15. تيزي وزو", "16. الجزائر", "17. الجلفة", "18. جيجل", "19. سطيف", "20. سعيدة",
+            "21. سكيكدة", "22. سيدي بلعباس", "23. عنابة", "24. قالمة", "25. قسنطينة", "26. المدية", "27. مستغانم", "28. المسيلة", "29. معسكر", "30. ورقلة",
+            "31. وهران", "32. البيض", "33. إليزي", "34. برج بوعريريج", "35. بومرداس", "36. الطارف", "37. تندوف", "38. تيسمسيلت", "39. الوادي", "40. خنشلة",
+            "41. سوق أهراس", "42. تيبازة", "43. ميلة", "44. عين الدفلى", "45. النعامة", "46. عين تموشنت", "47. غرداية", "48. غليزان", "49. تيميمون", "50. برج باجي مختار",
+            "51. أولاد جلال", "52. بني عباس", "53. عين صالح", "54. عين قزام", "55. توقرت", "56. جانت", "57. المغير", "58. المنيعة", "59. أفلو", "60. بريكة",
+            "61. القنطرة", "62. بئر العاتر", "63. العريشة", "64. قصر الشلالة", "65. عين وسارة", "66. مسعد", "67. قصر البخاري", "68. بوسعادة", "69. الأبيض سيدي الشيخ"
+        ];
+
+        function populateWilayasDropdown() {
+            const select = document.getElementById('order-wilaya');
+            if(!select || select.options.length > 1) return;
+            algeriaWilayas.forEach(w => {
+                const opt = document.createElement('option'); opt.value = w; opt.textContent = w; select.appendChild(opt);
+            });
+        }
+
+        var activePerfume = null;
+        var currentMainTab = 'all';
+        var currentCategory = 'all';
+        var cart = [];
+        var wishlist = JSON.parse(localStorage.getItem('wishlist_amateur')) || [];
+        var currentUser = JSON.parse(localStorage.getItem('currentUser_amateur')) || null;
+        var currentTheme = localStorage.getItem('site_theme_amateur') || 'dark';
+
+        var rabahKnowledgeBase = JSON.parse(localStorage.getItem('rabah_knowledge_base_amateur')) || [
+            { id: 1, shortQuestion: "كيف أختار عطري المناسب؟", fullAnswer: "لاختيار عطر التوقيع الخاص بك، يمكنك استخدام زر 'المستشار العطري' في يمين الشاشة لتحديد الفصل، الجنس، والنوتات المفضلة لديك بدقة مطلقة." },
+            { id: 2, shortQuestion: "ما هي مدة ثبات وفوحان العطور؟", fullAnswer: "تتميز عطورنا بثبات طولي استثنائي وفوحان ساحر يمتد لساعات طوال وحتى لليوم التالي على الأقمشة بفضل تعتيق الزيوت الخام النقية." },
+            { id: 3, shortQuestion: "كيف تتم عملية التوصيل والدفع؟", fullAnswer: "نوفر خدمة توصيل سريعة وموثوقة لكافة ولايات الوطن الـ 69. يمكنك إتمام طلبك بكل سهولة وسنتصل بك لتاكيد طلبك." },
+            { id: 4, shortQuestion: "هل يؤثر نوع القماش على الثبات؟", fullAnswer: "نعم! الأقمشة الطبيعية كالصوف والقطن تحتضن الزيوت العطرية وتحتفظ بها لفترات أطول بكثير مقارنة بالأقمشة الصناعية." },
+            { id: 5, shortQuestion: "لماذا تختلف رائحة العطر بين شخصين؟", fullAnswer: "يعود ذلك إلى 'الكيمياء الشخصية للبشرة' (Skin Chemistry) من حموضة الجلد ودرجة حرارة الجسم التي تدمج زيوت العطر بشكل فريد." },
+            { id: 6, shortQuestion: "كيف أعرف أن العطر تعرض للتلف؟", fullAnswer: "إذا تعرض العطر لحرارة عالية أو شمس مباشرة قد يتغير لونه وتظهر رائحة تشبه الخل أو يختفي سريعاً." },
+            { id: 7, shortQuestion: "ما هي عطور فصلي الربيع والخريف؟", fullAnswer: "هي التوليفات التي تمزج بين الزهور الناعمة والأخشاب المعتدلة التي تتماشى مع نسمات الهواء العليلة." },
+            { id: 8, shortQuestion: "كيف يتم اختيار مصادر الزيوت الخام؟", fullAnswer: "نستورد زيوتنا الخالصة من أشهر بيوت الخبرة في فرنسا وإيطاليا ونخضعها لاختبارات مخبرية دقيقة." },
+            { id: 9, shortQuestion: "ما أهمية إتاحة سعات متعددة؟", fullAnswer: "تبدأ من 15 مل إلى 100 مل لتناسب ميزانية واحتياجات جميع الزبائن وتتيح لهم حرية التنويع." },
+            { id: 10, shortQuestion: "كيف أستفيد من عروض وتنزيلات المتجر؟", fullAnswer: "عبر تفقد تبويب 'التنزيلات 🔥' ومتابعة صفحاتنا الرسمية للحصول على الكوبونات الحصرية." },
+            { id: 11, shortQuestion: "ما معيار عطور 'الأكثر مبيعاً'؟", fullAnswer: "هي العطور التي حظيت بأعلى نسب رضا وإقبال بفضل توازنتها الاستثنائية بين الثبات والقبول الواسع." },
+            { id: 12, shortQuestion: "كيف أختار عطرًا يناسب مزاجي؟", fullAnswer: "الحمضيات تمنح طاقة حيوية، الأخشاب واللافندر تمنح استرخاءً، والعود والتبغ يمنحان ثقة مطلقة." },
+            { id: 13, shortQuestion: "ما هي قواعد ارتداء العطور للعمل؟", fullAnswer: "الاعتدال برشتين إلى ثلاث برائحة نظيفة وهادئة تحترم المساحة الشخصية لمن حولك." },
+            { id: 14, shortQuestion: "كيف أتعامل مع عطور الفصول الحارة؟", fullAnswer: "في الصيف نوصي بالحمضيات الفوارة والنوتات البحرية لتجنب الثقل مع التعرق." },
+            { id: 15, shortQuestion: "ما هو عطر التوقيع الشخصي؟", fullAnswer: "هو عطرك الأبدي الذي يعبر عن روحك ويهديك الثقة التامة والجاذبية في كل مكان تدخل إليه." }
+        ];
+
+        const perfumeNotesMap = {
+            "خشبي": { label: "🪵 خشبي", img: "note-wood.jpg" }, "قوي": { label: "🔥 قوي", img: "note-strong.jpg" },
+            "زهري": { label: "🌸 زهري", img: "note-floral.jpg" }, "حمضيات": { label: "🍋 حمضيات", img: "note-citrus.jpg" },
+            "فواكه": { label: "🍎 فواكه", img: "note-fruity.jpg" }, "حلو": { label: "🍯 حلو", img: "note-sweet.jpg" },
+            "عود": { label: "🪵 عود", img: "note-oud.jpg" }, "تبغ": { label: "🍂 تبغ", img: "note-tobacco.jpg" },
+            "فانيلا": { label: "🍦 فانيلا", img: "note-vanilla.jpg" }, "بحري": { label: "🌊 بحري", img: "note-marine.jpg" },
+            "اروماتيك": { label: "🌿 اروماتيك", img: "note-aromatic.jpg" }, "خفيف": { label: "☁️ خفيف", img: "note-light.jpg" },
+            "جلد": { label: "👜 جلد", img: "note-leather.jpg" }, "حديد": { label: "⛓️ حديد", img: "note-metallic.jpg" },
+            "ترابي": { label: "🪨 ترابي", img: "note-earthy.jpg" }, "باردة": { label: "🧊 باردة", img: "note-cold.jpg" }
+        };
+
+        const brandsListConfig = [
+            { name: "Azzaro", img: "brand-azzaro.jpg" }, { name: "Dior", img: "brand-dior.jpg" }, { name: "Dolce & Gabbana", img: "brand-dolce.jpg" },
+            { name: "Emporio Armani", img: "brand-emporio.jpg" }, { name: "Jean Paul Gaultier", img: "brand-jeanpaul.jpg" }, { name: "Hugo Boss", img: "brand-hugoboss.jpg" },
+            { name: "Yves Saint Laurent", img: "brand-yves.jpg" }, { name: "Chanel", img: "brand-chanel.jpg" }, { name: "Paco Rabanne", img: "brand-pacorabanne.jpg" },
+            { name: "Berberry", img: "brand-berberry.jpg" }, { name: "Carolina", img: "brand-carolina.jpg" }, { name: "Zara", img: "brand-zara.jpg" },
+            { name: "Orto Parisi", img: "brand-ortoparisi.jpg" }, { name: "Maison Crivelli", img: "brand-maison.jpg" }, { name: "Xerjoff", img: "brand-xerjoff.jpg" },
+            { name: "Louis Vuitton", img: "brand-louisvuitton.jpg" }, { name: "Kajal", img: "brand-kajal.jpg" }, { name: "Kayali", img: "brand-kayali.jpg" },
+            { name: "Givenchy", img: "brand-givenchi.jpg" }, { name: "Tom Ford", img: "brand-tomford.jpg" }, { name: "Other", img: "brand-other.jpg" }
+        ];
+
+        function updateAuthDisplay() {
+            const label = document.getElementById('signin-label');
+            const iconContainer = document.getElementById('signin-icon-container');
+            if(!label || !iconContainer) return;
+
+            if (currentUser) {
+                const emailStr = (currentUser.email || '').toLowerCase();
+                if (emailStr === OWNER_CREDENTIALS.email.toLowerCase()) {
+                    label.textContent = "RABAH";
+                    iconContainer.innerHTML = `<img src="LOGO.jpg" alt="RABAH" onerror="this.src='https://placehold.co/28x28/071410/d4af37?text=AP'">`;
+                } else {
+                    label.textContent = currentUser.user_metadata?.full_name || emailStr.split('@')[0];
+                    iconContainer.innerHTML = `<svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>`;
+                }
+            } else {
+                label.textContent = "دخول";
+                iconContainer.innerHTML = `<svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>`;
+            }
+            checkAdminAccess();
+        }
+
+        function toggleMobileMenu(e) {
+            if(e) e.stopPropagation();
+            const menu = document.getElementById('mobile-dropdown-menu');
+            if(menu) menu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobile-dropdown-menu');
+            if(menu && !menu.contains(e.target)) menu.classList.remove('active');
+        });
+
+        function toggleAuthModal(open) {
+            const modal = document.getElementById('auth-modal');
+            if(modal) { modal.classList.toggle('active', open); backToLoginView(); }
+        }
+
+        function showRegisterView(e) {
+            if(e) e.preventDefault();
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+        }
+
+        function backToLoginView(e) {
+            if(e) e.preventDefault();
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        async function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const pass = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm-password').value;
+            if(pass.length < 8 || pass.length > 16) { alert("كلمة المرور بين 8 و 16 حرفاً."); return; }
+            if(pass !== confirmPass) { alert("كلمتا المرور غير متطابقتين."); return; }
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient.auth.signUp({ email, password: pass, options: { data: { full_name: name } } });
+                    if (error) throw error;
+                    currentUser = data.user || { email, user_metadata: { full_name: name } };
+                    localStorage.setItem('currentUser_amateur', JSON.stringify(currentUser));
+                    alert("تم إنشاء وتسجيل الدخول بنجاح!"); toggleAuthModal(false); updateAuthDisplay();
+                } catch (err) { alert("خطأ: " + err.message); }
+            }
+        }
+
+        async function handleUserLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+            if(email === OWNER_CREDENTIALS.email && password === OWNER_CREDENTIALS.password) {
+                currentUser = { email: OWNER_CREDENTIALS.email };
+                localStorage.setItem('currentUser_amateur', JSON.stringify(currentUser));
+                toggleAuthModal(false); updateAuthDisplay(); showToast("مرحباً بك يا مؤسس المتجر 👑"); return;
+            }
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    currentUser = data.user; localStorage.setItem('currentUser_amateur', JSON.stringify(currentUser));
+                    toggleAuthModal(false); updateAuthDisplay(); showToast("تم تسجيل الدخول بنجاح ✨");
+                } catch (err) { alert("فشل الدخول: تحقق من بياناتك."); }
+            }
+        }
+
+        function checkAdminAccess() {
+            const adminBtn = document.getElementById('admin-nav-btn');
+            const ownerRabahToggle = document.getElementById('owner-rabah-settings-toggle');
+            const isOwner = currentUser && currentUser.email.toLowerCase() === OWNER_CREDENTIALS.email.toLowerCase();
+            if (adminBtn) adminBtn.classList.toggle('hidden', !isOwner);
+            if (ownerRabahToggle) ownerRabahToggle.classList.toggle('hidden', !isOwner);
+        }
+
+        function switchView(viewId) {
+            hideAllViews();
+            const view = document.getElementById(viewId);
+            if(view) { view.classList.remove('hidden'); view.classList.remove('view-enter'); void view.offsetWidth; view.classList.add('view-enter'); }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openAdminDashboard() { switchView('admin-view'); }
+        function showHomePage() { switchView('home-view'); }
+        function showStoryPage() { switchView('story-view'); initStorySlider(); }
+        function showDeveloperPage() { switchView('developer-view'); }
+        function showWishlistPage() {
+            if (!currentUser) { alert("يجب تسجيل الدخول أولاً لعرض المفضلة."); toggleAuthModal(true); return; }
+            switchView('wishlist-view'); renderWishlistPage();
+        }
+
+        var advisorState = { step: 1, season: '', cat: '', nature: '', note: '', brand: '' };
+        function showAdvisorPage() {
+            switchView('advisor-view');
+            advisorState = { step: 1, season: '', cat: '', nature: '', note: '', brand: '' };
+            renderAdvisorStep();
+        }
+
+        function renderAdvisorStep() {
+            const container = document.getElementById('advisor-quiz-container');
+            if(!container) return;
+            if(advisorState.step === 1) {
+                container.innerHTML = `<div class="text-center space-y-6"><h3 class="text-lg sm:text-2xl font-black pure-gold-text trajan-font">1. ما هو الفصل الذي تريده لعطرك؟</h3><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4"><div class="advisor-card-option" onclick="selectAdvisorOption('season', 'صيفي')"><img src="season-summer.jpg"><span class="font-bold text-amber-300">صيفي ☀️</span></div><div class="advisor-card-option" onclick="selectAdvisorOption('season', 'شتوي')"><img src="season-winter.jpg"><span class="font-bold text-amber-300">شتوي ❄️</span></div><div class="advisor-card-option" onclick="selectAdvisorOption('season', 'طوال السنة')"><img src="season-all-year.jpg"><span class="font-bold text-amber-300">طوال السنة 🌿</span></div><div class="advisor-card-option" onclick="selectAdvisorOption('season', 'ربيعي')"><img src="season-spring.jpg"><span class="font-bold text-amber-300">ربيعي 🌸</span></div><div class="advisor-card-option" onclick="selectAdvisorOption('season', 'خريفي')"><img src="season-autumn.jpg"><span class="font-bold text-amber-300">خريفي 🍂</span></div></div></div>`;
+            } else if(advisorState.step === 2) {
+                container.innerHTML = `<div class="text-center space-y-6"><h3 class="text-lg sm:text-2xl font-black pure-gold-text trajan-font">2. ما هو جنس العطر الذي تريده؟</h3><div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto"><div class="advisor-card-option" onclick="selectAdvisorOption('cat', 'men')"><img src="cat-men.jpg"><span class="font-bold text-amber-300">رجالي 👔</span></div><div class="advisor-card-option" onclick="selectAdvisorOption('cat', 'women')"><img src="cat-women.jpg"><span class="font-bold text-amber-300">نسائي 🌸</span></div><div class="advisor-card-option" onclick="selectAdvisorOption('cat', 'unisex')"><img src="cat-unisex.jpg"><span class="font-bold text-amber-300">للجنسين ✨</span></div></div><button onclick="advisorState.step=1; renderAdvisorStep();" class="text-xs luxury-btn px-4 py-2 rounded-full">← السابقة</button></div>`;
+            } else if(advisorState.step === 3) {
+                container.innerHTML = `<div class="text-center space-y-6"><h3 class="text-lg sm:text-2xl font-black pure-gold-text trajan-font">3. ما هي طبيعة ونوع العطر الذي تريده؟</h3><div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-md mx-auto"><div onclick="selectAdvisorOption('nature', 'Designer')" class="p-8 rounded-2xl bg-black/60 border-2 border-amber-400 cursor-pointer font-bold text-base pure-gold-text">Designer (عطور الماركات)</div><div onclick="selectAdvisorOption('nature', 'Niche')" class="p-8 rounded-2xl bg-black/60 border-2 border-amber-400 cursor-pointer font-bold text-base pure-gold-text">Niche (العطور النادرة الفاخرة)</div></div><button onclick="advisorState.step=2; renderAdvisorStep();" class="text-xs luxury-btn px-4 py-2 rounded-full">← السابقة</button></div>`;
+            } else if(advisorState.step === 4) {
+                container.innerHTML = `<div class="text-center space-y-6"><h3 class="text-lg sm:text-2xl font-black pure-gold-text trajan-font">4. ما هي النوتة أو النكهة التي تريدها؟</h3><div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-96 overflow-y-auto pr-1">${Object.entries(perfumeNotesMap).map(([key, val]) => `<div class="advisor-card-option" onclick="selectAdvisorOption('note', '${key}')"><img src="${val.img}"><span class="font-bold text-amber-300 text-xs">${val.label}</span></div>`).join('')}</div><button onclick="advisorState.step=3; renderAdvisorStep();" class="text-xs luxury-btn px-4 py-2 rounded-full">← السابقة</button></div>`;
+            } else if(advisorState.step === 5) {
+                container.innerHTML = `
+                    <div class="text-center space-y-6">
+                        <h3 class="text-lg sm:text-2xl font-black pure-gold-text trajan-font">5. ما هي الماركة أو دار العطر التي تريدها؟</h3>
+                        <div class="grid grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
+                            ${brandsListConfig.map(b => `
+                                <div class="advisor-card-option" onclick="selectAdvisorOption('brand', '${b.name}')">
+                                    <img src="${b.img}" onerror="this.src='https://placehold.co/100x100/011c16/d4af37?text=AP'">
+                                    <span class="font-bold text-amber-300 text-xs truncate w-full">${b.name}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button onclick="advisorState.step=4; renderAdvisorStep();" class="text-xs luxury-btn px-4 py-2 rounded-full mt-2">← السابقة</button>
+                    </div>
+                `;
+            } else if(advisorState.step === 6) {
+                renderAdvisorResults();
+            }
+        }
+
+        function selectAdvisorOption(field, val) { advisorState[field] = val; advisorState.step++; renderAdvisorStep(); }
+
+        function renderAdvisorResults() {
+            const container = document.getElementById('advisor-quiz-container');
+            if(!container) return;
+            const matched = perfumesList.filter(p => {
+                const matchSeason = !advisorState.season || (p.season && p.season.includes(advisorState.season));
+                const matchCat = !advisorState.cat || p.cat === advisorState.cat;
+                const matchNature = !advisorState.nature || p.nature === advisorState.nature;
+                const matchNote = !advisorState.note || (p.notes && p.notes.includes(advisorState.note));
+                const matchBrand = !advisorState.brand || advisorState.brand === 'Other' || (p.brand && p.brand.toLowerCase().includes(advisorState.brand.toLowerCase()));
+                return matchSeason && matchCat && matchNature && matchNote && matchBrand;
+            });
+            if(matched.length === 0) {
+                container.innerHTML = `<div class="text-center space-y-6 py-10"><h3 class="text-xl font-black pure-gold-text trajan-font">نتائج البحث العطري</h3><p class="text-xs opacity-80">عذراً، لم نجد عطراً مطابقاً تماماً.</p><button onclick="showAdvisorPage()" class="px-6 py-3 luxury-btn rounded-xl text-xs font-bold block mx-auto">إعادة البحث 🔄</button></div>`;
+            } else {
+                container.innerHTML = `<div class="space-y-6"><h3 class="text-xl font-black pure-gold-text trajan-font text-center">عطور مقترحة خصيصاً لك ✨</h3><div class="grid grid-cols-2 sm:grid-cols-3 gap-4">${matched.map(item => `<div class="luxury-card rounded-2xl p-3 flex flex-col justify-between group cursor-pointer" onclick="goToDetailPage(${item.id})"><div class="h-36 bg-black rounded-xl overflow-hidden mb-2"><img src="${item.images[0]}" class="w-full h-full object-cover"></div><h4 class="text-xs font-bold text-amber-200 trajan-font truncate">${item.name}</h4><div class="text-[10px] text-amber-400 font-mono">${item.brand || ''}</div><button class="mt-2 text-[10px] luxury-btn py-1 rounded-full font-bold">اطلب الآن ⚡</button></div>`).join('')}</div><div class="text-center pt-4"><button onclick="showAdvisorPage()" class="text-xs luxury-btn px-6 py-2 rounded-full">بحث جديد 🔄</button></div></div>`;
+            }
+        }
+
+        function showRabahGptPage() { switchView('rabahgpt-view'); renderRabahQuickQuestions(); renderOwnerRabahQuestionsList(); }
+        
+        // دالة عرض 3 أسئلة عشوائية متجددة في كل مرة لتنظيف الواجهة
+        function renderRabahQuickQuestions() {
+            const container = document.getElementById('rabah-quick-questions');
+            if(!container) return;
+            if(!rabahKnowledgeBase || rabahKnowledgeBase.length === 0) {
+                container.innerHTML = `<div class="text-xs opacity-60 text-center py-2">لا توجد أسئلة متاحة.</div>`;
+                return;
+            }
+            let shuffled = [...rabahKnowledgeBase].sort(() => 0.5 - Math.random());
+            let selected = shuffled.slice(0, 3);
+
+            container.innerHTML = selected.map(item => `
+                <button onclick="askRabahQuestion(${item.id})" class="p-3 rounded-xl bg-black/50 border border-amber-500/30 text-amber-200 hover:border-amber-400 hover:bg-amber-500/10 transition text-xs text-right font-bold truncate">
+                    💡 ${item.shortQuestion}
+                </button>
+            `).join('');
+        }
+
+        function askRabahQuestion(id) {
+            const qObj = rabahKnowledgeBase.find(item => item.id === id);
+            if(!qObj) return;
+            appendRabahMessage(qObj.shortQuestion, 'user'); 
+            appendTypewriterMessage(qObj.fullAnswer, 'ai');
+            renderRabahQuickQuestions();
+        }
+
+        function sendRabahMessage() {
+            const input = document.getElementById('rabah-user-input'); const txt = input.value.trim();
+            if(!txt) return;
+            appendRabahMessage(txt, 'user'); input.value = '';
+            let matched = rabahKnowledgeBase.find(item => item.shortQuestion.toLowerCase().includes(txt.toLowerCase()) || txt.toLowerCase().includes('السلام') || txt.toLowerCase().includes('مرحبا'));
+            if(matched) {
+                setTimeout(() => appendTypewriterMessage(matched.fullAnswer, 'ai'), 400);
+            } else {
+                setTimeout(() => appendTypewriterMessage("أهلاً بك يا زائرنا الكريم في دارنا الفاخرة! نحن نوفر كافة التفاصيل حول العطور والتوصيل. اختر أحد الأسئلة المقترحة أو تواصل معنا عبر واتساب للمساعدة الفورية.", 'ai'), 400);
+            }
+            renderRabahQuickQuestions();
+        }
+
+        function appendRabahMessage(text, sender) {
+            const history = document.getElementById('rabah-chat-history');
+            if(!history) return;
+            const div = document.createElement('div');
+            div.className = sender === 'user' ? 'rabah-message-user' : 'rabah-message-ai';
+            div.innerHTML = sender === 'ai' ? `<b>Rabah-GPT:</b><br>${text}` : text;
+            history.appendChild(div); history.scrollTop = history.scrollHeight;
+        }
+
+        // دالة انيميشن الكتابة التلقائية (Typewriter Effect) للذكاء الاصطناعي
+        function appendTypewriterMessage(fullText, sender) {
+            const history = document.getElementById('rabah-chat-history');
+            if(!history) return;
+            const div = document.createElement('div');
+            div.className = 'rabah-message-ai';
+            div.innerHTML = `<b>Rabah-GPT:</b><br><span class="typewriter-text"></span>`;
+            history.appendChild(div);
+            history.scrollTop = history.scrollHeight;
+
+            const spanEl = div.querySelector('.typewriter-text');
+            let i = 0;
+            // حساب السرعة بحيث تكتمل الكتابة بسلاسة وجمال
+            let speed = Math.max(10, Math.min(30, 2000 / fullText.length));
+            function typeWriter() {
+                if (i < fullText.length) {
+                    spanEl.innerHTML += fullText.charAt(i);
+                    i++;
+                    history.scrollTop = history.scrollHeight;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+            typeWriter();
+        }
+
+        function toggleOwnerRabahSettings() { document.getElementById('owner-rabah-settings-panel').classList.toggle('hidden'); }
+        function renderOwnerRabahQuestionsList() {
+            const listEl = document.getElementById('owner-rabah-questions-list');
+            if(!listEl) return;
+            listEl.innerHTML = rabahKnowledgeBase.map(item => `<div class="luxury-card p-3 rounded-xl flex items-center justify-between text-xs"><div class="truncate max-w-[280px]"><div class="font-bold text-amber-300">${item.shortQuestion}</div></div><div class="flex gap-2"><button onclick="loadRabahQForEdit(${item.id})" class="royal-nav-btn text-[10px] px-2.5 py-1">تعديل ⚙️</button><button onclick="deleteRabahQuestion(${item.id})" class="text-red-400 font-bold hover:underline px-1">حذف ✕</button></div></div>`).join('') || `<div class="opacity-60 text-center py-4">لا توجد أسئلة مضافة.</div>`;
+        }
+        function handleSaveRabahQuestion(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-rabah-q-id').value;
+            const shortQ = document.getElementById('rabah-q-text').value.trim();
+            const fullA = document.getElementById('rabah-q-answer').value.trim();
+            if(id) { const q = rabahKnowledgeBase.find(item => item.id == id); if(q) { q.shortQuestion = shortQ; q.fullAnswer = fullA; } }
+            else { rabahKnowledgeBase.push({ id: Date.now(), shortQuestion: shortQ, fullAnswer: fullA }); }
+            localStorage.setItem('rabah_knowledge_base_amateur', JSON.stringify(rabahKnowledgeBase));
+            resetRabahForm(); renderRabahQuickQuestions(); renderOwnerRabahQuestionsList();
+            showToast("تم حفظ السؤال في قاعدة معارف Rabah-GPT بنجاح ✨");
+        }
+        function loadRabahQForEdit(id) {
+            const q = rabahKnowledgeBase.find(item => item.id === id);
+            if(!q) return;
+            document.getElementById('edit-rabah-q-id').value = q.id;
+            document.getElementById('rabah-q-text').value = q.shortQuestion;
+            document.getElementById('rabah-q-answer').value = q.fullAnswer;
+        }
+        function deleteRabahQuestion(id) {
+            if(confirm("هل أنت متأكد من حذف هذا السؤال؟")) {
+                rabahKnowledgeBase = rabahKnowledgeBase.filter(item => item.id !== id);
+                localStorage.setItem('rabah_knowledge_base_amateur', JSON.stringify(rabahKnowledgeBase));
+                renderRabahQuickQuestions(); renderOwnerRabahQuestionsList(); showToast("تم الحذف بنجاح");
+            }
+        }
+        function resetRabahForm() { document.getElementById('edit-rabah-q-id').value = ''; document.getElementById('rabah-q-text').value = ''; document.getElementById('rabah-q-answer').value = ''; }
+
+        function hideAllViews() {
+            ['home-view', 'product-detail-view', 'blog-view', 'story-view', 'developer-view', 'wishlist-view', 'admin-view', 'admin-add-perfume-view', 'admin-edit-list-view', 'admin-edit-perfume-view', 'admin-add-article-view', 'admin-manage-articles-view', 'admin-edit-article-view', 'advisor-view', 'rabahgpt-view'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.classList.add('hidden');
+            });
+        }
+
+        function renderGradesConfig(selectedGrades = {}) {
+            const container = document.getElementById('add-grades-container');
+            if(!container) return;
+            let html = '';
+            for(let i=1; i<=10; i++) {
+                const gradeKey = `x${i}`;
+                const isChecked = selectedGrades[gradeKey] ? selectedGrades[gradeKey].active : (i === 1);
+                const isAvailable = selectedGrades[gradeKey] ? selectedGrades[gradeKey].available : true;
+                html += `<div class="luxury-card p-2 rounded-xl flex flex-col gap-1 text-[11px]"><label class="flex items-center gap-2 cursor-pointer font-bold text-amber-300"><input type="checkbox" name="grade-active" value="${gradeKey}" ${isChecked ? 'checked' : ''} class="accent-amber-500"> الجودة X${i}</label><label class="flex items-center gap-1.5 cursor-pointer opacity-90 pl-4"><input type="checkbox" name="grade-avail-${gradeKey}" ${isAvailable ? 'checked' : ''} class="accent-emerald-500"> متوفر</label></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function openAddPerfumePage() {
+            switchView('admin-add-perfume-view');
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-brand').value = '';
+            document.getElementById('p-desc').value = '';
+            for(let i=1; i<=5; i++) { const imgInp = document.getElementById(`p-img-${i}`); if(imgInp) imgInp.value = ''; }
+            document.querySelectorAll('input[name="p-status-box"]').forEach(cb => cb.checked = false);
+            const container = document.getElementById('add-notes-container');
+            container.innerHTML = Object.entries(perfumeNotesMap).map(([key, val]) => `<label class="flex items-center gap-2 cursor-pointer bg-black/30 p-2 rounded-xl border border-amber-500/20"><input type="checkbox" name="p-notes" value="${key}" class="accent-amber-500"> ${val.label}</label>`).join('');
+            renderGradesConfig();
+        }
+
+        function openAddArticlePage() { switchView('admin-add-article-view'); }
+        function openManageArticlesList() {
+            switchView('admin-manage-articles-view');
+            const container = document.getElementById('manage-articles-container');
+            container.innerHTML = articlesList.map(a => `<div class="luxury-card p-4 rounded-2xl flex items-center justify-between text-xs"><div><div class="font-bold text-amber-300 trajan-font text-sm">${a.title}</div><div class="opacity-75 mt-1">${a.content.substring(0, 60)}...</div></div><div class="flex gap-2"><button onclick="loadArticleForEdit(${a.id})" class="royal-nav-btn text-[10px] px-3 py-1.5">تعديل ⚙️</button><button onclick="deleteArticle(${a.id})" class="text-red-400 font-bold hover:underline px-2">حذف ✕</button></div></div>`).join('') || `<div class="text-center opacity-60 py-10">لا توجد مقالات.</div>`;
+        }
+
+        function openEditPerfumesList() { switchView('admin-edit-list-view'); renderAdminPerfumesList(perfumesList); }
+        function renderAdminPerfumesList(listToRender) {
+            const container = document.getElementById('edit-perfumes-container');
+            if(!container) return;
+            container.innerHTML = listToRender.map(p => `<div class="luxury-card p-4 rounded-2xl flex items-center justify-between text-xs perfume-admin-item"><div class="flex items-center gap-4"><img src="${p.images[0]}" class="w-12 h-12 rounded-lg object-cover"><div><div class="font-bold text-amber-300 trajan-font">${p.name}</div><div class="opacity-75">${p.brand || ''}</div></div></div><div class="flex gap-2"><button onclick="loadPerfumeForEdit(${p.id})" class="royal-nav-btn text-[10px] px-3 py-1.5">تعديل ⚙️</button><button onclick="deletePerfume(${p.id})" class="text-red-400 font-bold hover:underline px-2">حذف ✕</button></div></div>`).join('') || `<div class="text-center opacity-60 py-10">لا توجد عطور.</div>`;
+        }
+        function filterAdminPerfumesList() {
+            const query = document.getElementById('admin-search-perfume').value.toLowerCase().trim();
+            const filtered = perfumesList.filter(p => p.name.toLowerCase().includes(query) || (p.brand && p.brand.toLowerCase().includes(query)));
+            renderAdminPerfumesList(filtered);
+        }
+
+        function loadPerfumeForEdit(id) {
+            const p = perfumesList.find(item => item.id === id);
+            if(!p) return;
+            document.getElementById('edit-p-id').value = p.id;
+            document.getElementById('edit-p-name').value = p.name || '';
+            document.getElementById('edit-p-brand').value = p.brand || '';
+            document.getElementById('edit-p-cat').value = p.cat || 'men';
+            document.getElementById('edit-p-nature').value = p.nature || 'Designer';
+            document.getElementById('edit-p-season').value = p.season || 'طوال السنة';
+            document.getElementById('edit-p-desc').value = p.desc || '';
+            document.getElementById('edit-p-img-1').value = p.images[0] || '';
+            document.getElementById('edit-p-img-2').value = p.images[1] || '';
+            document.getElementById('edit-p-img-3').value = p.images[2] || '';
+            document.getElementById('edit-p-img-4').value = p.images[3] || '';
+            document.getElementById('edit-p-img-5').value = p.images[4] || '';
+            document.querySelectorAll('input[name="edit-p-status-box"]').forEach(cb => {
+                if (cb.value === 'new') cb.checked = p.isNew;
+                if (cb.value === 'bestseller') cb.checked = p.isBestSeller;
+                if (cb.value === 'discount') cb.checked = p.isDiscount;
+                if (cb.value === 'out') cb.checked = !p.inStock;
+            });
+            const notesContainer = document.getElementById('edit-notes-container');
+            notesContainer.innerHTML = Object.entries(perfumeNotesMap).map(([key, val]) => `<label class="flex items-center gap-2 cursor-pointer bg-black/30 p-2 rounded-xl border border-amber-500/20"><input type="checkbox" name="edit-p-notes" value="${key}" ${(p.notes || []).includes(key) ? 'checked' : ''} class="accent-amber-500"> ${val.label}</label>`).join('');
+            const editGradesContainer = document.getElementById('edit-grades-container');
+            let gradesHtml = '';
+            for(let i=1; i<=10; i++) {
+                const gKey = `x${i}`;
+                const gradeObj = p.grades && p.grades[gKey] ? p.grades[gKey] : { active: (i===1), available: true };
+                gradesHtml += `<div class="luxury-card p-2 rounded-xl flex flex-col gap-1 text-[11px]"><label class="flex items-center gap-2 cursor-pointer font-bold text-amber-300"><input type="checkbox" name="edit-grade-active" value="${gKey}" ${gradeObj.active ? 'checked' : ''} class="accent-amber-500"> الجودة X${i}</label><label class="flex items-center gap-1.5 cursor-pointer opacity-90 pl-4"><input type="checkbox" name="edit-grade-avail-${gKey}" ${gradeObj.available ? 'checked' : ''} class="accent-emerald-500"> متوفر</label></div>`;
+            }
+            editGradesContainer.innerHTML = gradesHtml;
+            switchView('admin-edit-perfume-view');
+        }
+
+        async function handleSaveNewPerfume(e) {
+            e.preventDefault();
+            const name = document.getElementById('p-name').value.trim();
+            const brand = document.getElementById('p-brand').value.trim();
+            const cat = document.getElementById('p-cat').value;
+            const nature = document.getElementById('p-nature').value;
+            const season = document.getElementById('p-season').value;
+            const desc = document.getElementById('p-desc').value.trim();
+            const notes = Array.from(document.querySelectorAll('input[name="p-notes"]:checked')).map(cb => cb.value);
+            let isNew = false, isBestSeller = false, isDiscount = false, inStock = true;
+            document.querySelectorAll('input[name="p-status-box"]:checked').forEach(cb => {
+                if (cb.value === 'new') isNew = true; if (cb.value === 'bestseller') isBestSeller = true;
+                if (cb.value === 'discount') isDiscount = true; if (cb.value === 'out') inStock = false;
+            });
+            let grades = {};
+            document.querySelectorAll('input[name="grade-active"]:checked').forEach(cb => {
+                const gKey = cb.value; const availCb = document.querySelector(`input[name="grade-avail-${gKey}"]`);
+                grades[gKey] = { active: true, available: availCb ? availCb.checked : true };
+            });
+            let images = [];
+            for(let i=1; i<=5; i++) { const link = document.getElementById(`p-img-${i}`).value.trim(); if(link) images.push(link); }
+            if(images.length < 3) { alert("3 صور كحد أدنى مطلوبة!"); return; }
+            const newPerfumeRow = { name, brand, cat, season, nature, notes, grades, description: desc, images, is_new: isNew, is_bestseller: isBestSeller, is_discount: isDiscount, in_stock: inStock };
+            if (supabaseClient) {
+                try { const { error } = await supabaseClient.from('amateur_perfumes').insert([newPerfumeRow]); if (error) throw error; } catch (err) { alert("خطأ: " + err.message); return; }
+            }
+            showHomePage(); await syncPerfumesFromCloud(); showToast("تم حفظ العطر بنجاح ✨");
+        }
+
+        async function handleSaveEditedPerfume(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('edit-p-id').value);
+            const name = document.getElementById('edit-p-name').value.trim();
+            const brand = document.getElementById('edit-p-brand').value.trim();
+            const cat = document.getElementById('edit-p-cat').value;
+            const nature = document.getElementById('edit-p-nature').value;
+            const season = document.getElementById('edit-p-season').value;
+            const desc = document.getElementById('edit-p-desc').value.trim();
+            const notes = Array.from(document.querySelectorAll('input[name="edit-p-notes"]:checked')).map(cb => cb.value);
+            let isNew = false, isBestSeller = false, isDiscount = false, inStock = true;
+            document.querySelectorAll('input[name="edit-p-status-box"]:checked').forEach(cb => {
+                if (cb.value === 'new') isNew = true; if (cb.value === 'bestseller') isBestSeller = true;
+                if (cb.value === 'discount') isDiscount = true; if (cb.value === 'out') inStock = false;
+            });
+            let grades = {};
+            document.querySelectorAll('input[name="edit-grade-active"]:checked').forEach(cb => {
+                const gKey = cb.value; const availCb = document.querySelector(`input[name="edit-grade-avail-${gKey}"]`);
+                grades[gKey] = { active: true, available: availCb ? availCb.checked : true };
+            });
+            let images = [];
+            for(let i=1; i<=5; i++) { const link = document.getElementById(`edit-p-img-${i}`).value.trim(); if(link) images.push(link); }
+            if(images.length < 3) { alert("3 صور كحد أدنى مطلوبة!"); return; }
+            const updatedRow = { name, brand, cat, season, nature, notes, grades, description: desc, images, is_new: isNew, is_bestseller: isBestSeller, is_discount: isDiscount, in_stock: inStock };
+            if (supabaseClient) {
+                try { const { error } = await supabaseClient.from('amateur_perfumes').update(updatedRow).eq('id', id); if (error) throw error; } catch (err) { alert("خطأ: " + err.message); return; }
+            }
+            openAdminDashboard(); await syncPerfumesFromCloud(); showToast("تم تحديث العطر بنجاح ✨");
+        }
+
+        async function deletePerfume(id) {
+            if(confirm("هل أنت متأكد من حذف هذا العطر؟")) {
+                if (supabaseClient) { try { await supabaseClient.from('amateur_perfumes').delete().eq('id', id); } catch (err) {} }
+                perfumesList = perfumesList.filter(p => p.id !== id); openEditPerfumesList(); applyFilters(); showToast("تم الحذف");
+            }
+        }
+
+        var perfumesList = [];
+
+        function applyFilters() {
+            const query = (document.getElementById('search-input')?.value || '').toLowerCase();
+            const filtered = perfumesList.filter(item => {
+                let matchTab = true;
+                if (currentMainTab === 'discounts') matchTab = item.isDiscount;
+                else if (currentMainTab === 'bestsellers') matchTab = item.isBestSeller;
+                else if (currentMainTab === 'new') matchTab = item.isNew;
+                let matchCat = currentCategory === 'all' || item.cat === currentCategory;
+                let matchQ = !query || item.name.toLowerCase().includes(query) || (item.brand && item.brand.toLowerCase().includes(query));
+                return matchTab && matchCat && matchQ;
+            });
+            const grid = document.getElementById('perfumes-grid');
+            const noRes = document.getElementById('no-results');
+            if(!grid) return;
+            if(filtered.length === 0) { grid.innerHTML = ''; if(noRes) noRes.classList.remove('hidden'); } 
+            else {
+                if(noRes) noRes.classList.add('hidden');
+                grid.innerHTML = filtered.map(item => `
+                    <div class="luxury-card rounded-2xl overflow-hidden flex flex-col justify-between p-4 shadow-sm group">
+                        <div class="h-44 sm:h-56 bg-black mb-4 overflow-hidden rounded-xl flex items-center justify-center relative">
+                            <img src="${item.images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/300x400/011c16/d4af37?text=Perfume'">
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-xs sm:text-sm font-black text-amber-200 trajan-font">${item.name}</h4>
+                            <div class="text-[10px] text-amber-400 font-mono">${item.brand || ''}</div>
+                            <div class="pt-3 border-t border-amber-500/10 flex justify-between items-center">
+                                <span class="text-[10px] text-emerald-400 font-mono">متوفر بالورشة</span>
+                                <button onclick="goToDetailPage(${item.id})" class="text-[10px] luxury-btn px-2.5 sm:px-3 py-1.5 rounded-full font-bold uppercase tracking-wider relative z-25">تفاصيل العطر ←</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function syncPerfumesFromCloud() {
+            if (!supabaseClient) { applyFilters(); return; }
+            try {
+                const { data, error } = await supabaseClient.from('amateur_perfumes').select('*');
+                if (error) throw error;
+                if (data && data.length > 0) {
+                    perfumesList = data.map(item => {
+                        let parsedNotes = item.notes || [];
+                        if (typeof parsedNotes === 'string') { try { parsedNotes = JSON.parse(parsedNotes); } catch(e) { parsedNotes = []; } }
+                        let parsedGrades = item.grades || { x1: { active: true, available: true } };
+                        if (typeof parsedGrades === 'string') { try { parsedGrades = JSON.parse(parsedGrades); } catch(e) {} }
+                        let parsedImages = item.images || ["shop1.jpg", "shop2.jpg", "shop3.jpg"];
+                        if (typeof parsedImages === 'string') { try { parsedImages = JSON.parse(parsedImages); } catch(e) {} }
+                        if (!Array.isArray(parsedImages) && typeof parsedImages === 'object') { parsedImages = Object.values(parsedImages); }
+                        return {
+                            id: item.id, name: item.name || 'عطر فاخر', brand: item.brand || '', cat: item.cat || 'men',
+                            nature: item.nature || 'Designer', season: item.season || 'طوال السنة', notes: parsedNotes,
+                            grades: parsedGrades, desc: item.description || '', images: parsedImages.length > 0 ? parsedImages : ["shop1.jpg", "shop2.jpg", "shop3.jpg"], 
+                            isNew: item.is_new || false, isBestSeller: item.is_bestseller || false, isDiscount: item.is_discount || false,
+                            inStock: item.in_stock !== false, reviews: []
+                        };
+                    });
+                } else { perfumesList = []; }
+                applyFilters();
+            } catch (e) { applyFilters(); }
+        }
+
+        function switchMainTab(tab, btn) {
+            currentMainTab = tab;
+            document.querySelectorAll('.main-tab-btn').forEach(b => { b.classList.remove('text-amber-300', 'font-bold', 'border-b-2', 'border-amber-400'); b.classList.add('opacity-70'); });
+            if(btn) { btn.classList.add('text-amber-300', 'font-bold', 'border-b-2', 'border-amber-400'); btn.classList.remove('opacity-70'); }
+            applyFilters();
+        }
+
+        function filterCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-filter').forEach(b => { b.classList.remove('bg-amber-500', 'text-black'); b.classList.add('luxury-btn'); });
+            if(btn) { btn.classList.add('bg-amber-500', 'text-black'); btn.classList.remove('luxury-btn'); }
+            applyFilters();
+        }
+
+        function goToDetailPage(id) {
+            activePerfume = perfumesList.find(p => p.id === id);
+            if(!activePerfume) return;
+            document.getElementById('detail-perfume-name').textContent = activePerfume.name;
+            document.getElementById('detail-perfume-brand').textContent = activePerfume.brand || 'AMATEUR DE PARFUMS';
+            document.getElementById('detail-perfume-desc').textContent = activePerfume.desc;
+            setupDetailSlider(); renderPerfumeReviews(); updateWishlistButtonState(); setupGradeCycleButton(); updateSelectedPrice();
+            switchView('product-detail-view');
+        }
+
+        function setupDetailSlider() {
+            const wrapper = document.getElementById('detail-slider-wrapper');
+            if(!wrapper || !activePerfume || !activePerfume.images) return;
+            wrapper.innerHTML = activePerfume.images.map((img, idx) => `<div class="detail-slide ${idx === 0 ? 'active' : ''}"><img src="${img}" onerror="this.src='https://placehold.co/300x400/011c16/d4af37?text=Perfume'"></div>`).join('');
+            initDetailSlider();
+        }
+
+        function setupGradeCycleButton() {
+            const wrapper = document.getElementById('grades-selection-wrapper');
+            if(!wrapper || !activePerfume) return;
+            const availableGrades = [];
+            const gradesObj = activePerfume.grades || { x1: { active: true, available: true } };
+            for(let i=1; i<=10; i++) {
+                const gKey = `x${i}`;
+                if(gradesObj[gKey] && gradesObj[gKey].active && gradesObj[gKey].available) availableGrades.push(i);
+            }
+            if(availableGrades.length > 1) {
+                wrapper.classList.remove('hidden');
+                activePerfume.availableGradesList = availableGrades;
+                activePerfume.currentGradeIndex = 0;
+                updateGradeButtonLabel();
+            } else {
+                wrapper.classList.add('hidden');
+                activePerfume.availableGradesList = [1];
+                activePerfume.currentGradeIndex = 0;
+                const inputEl = document.getElementById('selected-grade-input');
+                if(inputEl) inputEl.value = 1;
+                updateSelectedPrice();
+            }
+        }
+
+        function updateGradeButtonLabel() {
+            if(!activePerfume || !activePerfume.availableGradesList) return;
+            const currentGradeNum = activePerfume.availableGradesList[activePerfume.currentGradeIndex] || 1;
+            const labelEl = document.getElementById('current-grade-label');
+            const inputEl = document.getElementById('selected-grade-input');
+            if(labelEl) labelEl.textContent = `X${currentGradeNum}`;
+            if(inputEl) inputEl.value = currentGradeNum;
+            updateSelectedPrice();
+        }
+
+        function cyclePerfumeGrade() {
+            if(!activePerfume || !activePerfume.availableGradesList) return;
+            activePerfume.currentGradeIndex = (activePerfume.currentGradeIndex + 1) % activePerfume.availableGradesList.length;
+            updateGradeButtonLabel();
+        }
+
+        function updateSelectedPrice() {
+            const checkedSize = document.querySelector('input[name="bottle_size"]:checked')?.value || '15ml';
+            const basePrices = { "15ml": 300, "20ml": 400, "25ml": 500, "30ml": 600, "50ml": 800, "80ml": 1000, "100ml": 1400 };
+            const basePrice = basePrices[checkedSize] || 300;
+            let multiplier = 1;
+            const inputEl = document.getElementById('selected-grade-input');
+            if(inputEl) multiplier = parseInt(inputEl.value) || 1;
+            let finalPrice = (basePrice * multiplier) - 100;
+            if(finalPrice < basePrice) finalPrice = basePrice;
+            document.getElementById('selected-perfume-price').textContent = finalPrice;
+        }
+
+        function scrollToReviewSection() { document.getElementById('perfume-review-section').scrollIntoView({ behavior: 'smooth' }); }
+        
+        function renderPerfumeReviews() {
+            const list = document.getElementById('perfume-reviews-list');
+            if(!list || !activePerfume) return;
+            list.innerHTML = (activePerfume.reviews || []).map(r => `<div class="text-xs border-b border-amber-500/20 py-2"><b>${r.user}:</b> ${r.text}</div>`).join('') || `<div class="text-xs opacity-60">لا توجد تعليقات بعد.</div>`;
+        }
+
+        function addToCartCurrentItem() {
+            if(!activePerfume) return;
+            const checkedSize = document.querySelector('input[name="bottle_size"]:checked')?.value || '15ml';
+            const inputEl = document.getElementById('selected-grade-input');
+            const gradeVal = inputEl ? `X${inputEl.value}` : 'X1';
+            const currentPriceText = parseInt(document.getElementById('selected-perfume-price').textContent) || 300;
+
+            cart.push({ id: activePerfume.id, name: `${activePerfume.name} (${gradeVal})`, option: checkedSize, price: currentPriceText, image: activePerfume.images[0], qty: 1 });
+            updateCartBadge();
+            showToast("تمت إضافة العطر للسلة ✨");
+        }
+        function buyNowCurrentItem() { addToCartCurrentItem(); toggleCartDrawer(true); }
+        
+        function updateCartBadge() { 
+            const b = document.getElementById('cart-count-badge'); 
+            if(b) b.textContent = cart.reduce((s, i) => s + i.qty, 0);
+        }
+        
+        function toggleCartDrawer(open) {
+            const d = document.getElementById('cart-drawer');
+            if(d) d.classList.toggle('hidden', !open);
+            if(open) {
+                populateWilayasDropdown();
+                renderCartItems();
+            }
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            if(!container) return;
+            if(cart.length === 0) {
+                container.innerHTML = `<div class="text-xs text-center opacity-60 py-4">السلة فارغة</div>`;
+                document.getElementById('cart-total-amount').textContent = "0 دج";
+                return;
+            }
+            container.innerHTML = cart.map((i, idx) => `
+                <div class="luxury-card p-2 rounded-xl text-xs flex justify-between items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <img src="${i.image || 'shop1.jpg'}" class="w-10 h-10 rounded-lg object-cover border border-amber-500/30" onerror="this.src='https://placehold.co/40x40/011c16/d4af37?text=AP'">
+                        <div>
+                            <div class="font-bold text-amber-200 trajan-font text-[11px]">${i.name}</div>
+                            <div class="text-[9px] opacity-75">${i.option}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-mono font-bold text-amber-300 text-[11px]">${i.price} دج</span>
+                        <button onclick="removeFromCart(${idx})" class="text-red-400 text-xs hover:scale-110">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const totalSum = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            document.getElementById('cart-total-amount').textContent = `${totalSum} دج`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            renderCartItems();
+            showToast("تم إزالة المنتج من السلة");
+        }
+
+        function submitRoyalOrder() {
+            const fullname = document.getElementById('order-fullname').value.trim();
+            const phone = document.getElementById('order-phone').value.trim();
+            const wilaya = document.getElementById('order-wilaya').value;
+            const address = document.getElementById('order-address').value.trim();
+
+            if(!fullname || !phone || !wilaya || !address) {
+                alert("يرجى ملء جميع حقول الاستمارة (الاسم، الهاتف، الولاية، العنوان) لإتمام الطلب.");
+                return;
+            }
+
+            let orderSummary = `✨ *طلب جديد عبر موقع عاشق العطور* ✨\n\n`;
+            orderSummary += `👤 *الاسم واللقب:* ${fullname}\n`;
+            orderSummary += `📞 *رقم الهاتف:* ${phone}\n`;
+            orderSummary += `📍 *الولاية:* ${wilaya}\n`;
+            orderSummary += `🏠 *العنوان:* ${address}\n\n`;
+            orderSummary += `🛍️ *المنتجات المطلوبة:* \n`;
+            let total = 0;
+            cart.forEach((item, idx) => {
+                orderSummary += `${idx+1}. ${item.name} - الحجم: ${item.option} - السعر: ${item.price} دج\n`;
+                total += item.price;
+            });
+            orderSummary += `\n💰 *التكلفة الإجمالية لكل شيء:* ${total} دج`;
+
+            const encodedText = encodeURIComponent(orderSummary);
+            const hiddenWaUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_CONFIG.phoneNumber}&text=${encodedText}`;
+            
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = hiddenWaUrl;
+            document.body.appendChild(iframe);
+            setTimeout(() => document.body.removeChild(iframe), 5000);
+
+            const msgBox = document.getElementById('order-success-msg');
+            msgBox.textContent = "شكراً لتسوقك مع Amateur De Parfum سنتصل قريبا لتاكيد طلبك";
+            document.getElementById('order-success-modal').classList.add('active');
+
+            cart = [];
+            updateCartBadge();
+        }
+
+        function closeOrderSuccessModal() {
+            document.getElementById('order-success-modal').classList.remove('active');
+            toggleCartDrawer(false);
+            showHomePage();
+        }
+
+        function showToast(m) {
+            const t = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            if(!t || !msg) return;
+            msg.textContent = m;
+            t.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        function handleSaveNewArticle(e) {
+            e.preventDefault();
+            const title = document.getElementById('article-title').value.trim();
+            const content = document.getElementById('article-content').value.trim();
+            let images = [];
+            for(let i=1; i<=5; i++) { const link = document.getElementById(`article-img-${i}`).value.trim(); if(link) images.push(link); }
+            if(images.length < 3) { alert("3 صور كحد أدنى مطلوبة!"); return; }
+            articlesList.unshift({ id: Date.now(), title, content, images });
+            openAdminDashboard(); showToast("تم نشر المقال بنجاح 📰");
+        }
+
+        function loadArticleForEdit(id) {
+            const a = articlesList.find(item => item.id === id);
+            if(!a) return;
+            document.getElementById('edit-article-id').value = a.id;
+            document.getElementById('edit-article-title').value = a.title || '';
+            document.getElementById('edit-article-content').value = a.content || '';
+            document.getElementById('edit-article-img-1').value = a.images[0] || '';
+            document.getElementById('edit-article-img-2').value = a.images[1] || '';
+            document.getElementById('edit-article-img-3').value = a.images[2] || '';
+            document.getElementById('edit-article-img-4').value = a.images[3] || '';
+            document.getElementById('edit-article-img-5').value = a.images[4] || '';
+            switchView('admin-edit-article-view');
+        }
+
+        function handleSaveEditedArticle(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('edit-article-id').value);
+            const title = document.getElementById('edit-article-title').value.trim();
+            const content = document.getElementById('edit-article-content').value.trim();
+            let images = [];
+            for(let i=1; i<=5; i++) { const link = document.getElementById(`edit-article-img-${i}`).value.trim(); if(link) images.push(link); }
+            if(images.length < 3) { alert("3 صور كحد أدنى مطلوبة!"); return; }
+            const index = articlesList.findIndex(a => a.id === id);
+            if(index !== -1) articlesList[index] = { ...articlesList[index], title, content, images };
+            openManageArticlesList(); showToast("تم تعديل المقال بنجاح ✨");
+        }
+
+        function deleteArticle(id) {
+            if(confirm("هل أنت متأكد من حذف هذا المقال؟")) {
+                articlesList = articlesList.filter(a => a.id !== id);
+                openManageArticlesList(); showToast("تم الحذف بنجاح");
+            }
+        }
+
+        function toggleWishlistCurrentItem() {
+            if (!currentUser) { alert("يجب تسجيل الدخول أولاً."); toggleAuthModal(true); return; }
+            if(!activePerfume) return;
+            const idx = wishlist.findIndex(item => item.id === activePerfume.id);
+            if(idx !== -1) { wishlist.splice(idx, 1); showToast("تم إزالة العطر من المفضلة"); } 
+            else { wishlist.push(activePerfume); showToast("تمت إضافة العطر إلى المفضلة ❤️"); }
+            localStorage.setItem('wishlist_amateur', JSON.stringify(wishlist));
+            updateWishlistButtonState();
+        }
+
+        function updateWishlistButtonState() {
+            const btn = document.getElementById('detail-wishlist-btn');
+            if(!btn || !activePerfume) return;
+            const exists = wishlist.some(item => item.id === activePerfume.id);
+            btn.textContent = exists ? "❤️ في المفضلة" : "🤍 أضف للمفضلة";
+        }
+
+        function renderWishlistPage() {
+            const grid = document.getElementById('wishlist-grid');
+            if(!grid) return;
+            if(wishlist.length === 0) { grid.innerHTML = `<div class="col-span-full text-center py-20 opacity-60">قائمة المفضلة فارغة حالياً.</div>`; return; }
+            grid.innerHTML = wishlist.map(item => `<div class="luxury-card rounded-2xl overflow-hidden flex flex-col justify-between p-4 shadow-sm group"><div class="h-44 bg-black mb-3 overflow-hidden rounded-xl flex items-center justify-center relative"><img src="${item.images[0]}" class="w-full h-full object-cover"></div><div class="space-y-1"><h4 class="text-xs font-black text-amber-200 trajan-font">${item.name}</h4><div class="text-[10px] text-amber-400 font-mono">${item.brand || ''}</div><div class="pt-2 flex justify-between items-center"><button onclick="goToDetailPage(${item.id})" class="text-[10px] luxury-btn px-2 py-1 rounded-full font-bold">عرض ←</button><button onclick="removeFromWishlist(${item.id})" class="text-red-400 text-[10px] hover:underline">حذف ✕</button></div></div></div>`).join('');
+        }
+
+        function removeFromWishlist(id) {
+            wishlist = wishlist.filter(item => item.id !== id);
+            localStorage.setItem('wishlist_amateur', JSON.stringify(wishlist));
+            renderWishlistPage(); showToast("تم الحذف");
+        }
+
+        function handleLikePerfume() {
+            if (!currentUser) { alert("يجب تسجيل الدخول أولاً."); toggleAuthModal(true); return; }
+            const countEl = document.getElementById('like-count'); countEl.textContent = parseInt(countEl.textContent) + 1;
+            showToast("شكراً لإعجابك بالعطر 👍");
+        }
+        function handleDislikePerfume() {
+            if (!currentUser) { alert("يجب تسجيل الدخول أولاً."); toggleAuthModal(true); return; }
+            const countEl = document.getElementById('dislike-count'); countEl.textContent = parseInt(countEl.textContent) + 1;
+            showToast("تم تسجيل تقييمك 👎");
+        }
+        function submitPerfumeReview() {
+            if (!currentUser) { alert("يجب تسجيل الدخول لكتابة تعليق."); toggleAuthModal(true); return; }
+            const txt = document.getElementById('perfume-review-text').value.trim();
+            if(!txt) return;
+            if(!activePerfume.reviews) activePerfume.reviews = [];
+            activePerfume.reviews.push({ user: currentUser.email.split('@')[0], text: txt });
+            document.getElementById('perfume-review-text').value = ''; renderPerfumeReviews(); showToast("تم نشر تعليقك بنجاح ✨");
+        }
+
+        function onLiveSearchInput() {
+            const query = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+            const dropdown = document.getElementById('live-search-dropdown');
+            if(!dropdown) return;
+            if(query.length === 0) { dropdown.style.display = 'none'; applyFilters(); return; }
+            const matched = perfumesList.filter(item => item.name.toLowerCase().includes(query));
+            applyFilters();
+            if(matched.length === 0) { dropdown.style.display = 'none'; return; }
+            dropdown.style.display = 'block';
+            dropdown.innerHTML = matched.map(item => `<div class="live-search-item" onclick="selectLiveSearchResult(${item.id})"><img src="${item.images[0]}"><div><div class="font-bold text-xs text-amber-300 trajan-font">${item.name}</div><div class="text-[10px] opacity-75">متوفر بالورشة</div></div></div>`).join('');
+        }
+
+        function selectLiveSearchResult(id) {
+            const dropdown = document.getElementById('live-search-dropdown');
+            if(dropdown) dropdown.style.display = 'none';
+            document.getElementById('search-input').value = ''; goToDetailPage(id);
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('live-search-dropdown');
+            const searchInput = document.getElementById('search-input');
+            if(dropdown && searchInput && !searchInput.contains(e.target) && !dropdown.contains(e.target)) dropdown.style.display = 'none';
+        });
+
+        function initInteractiveVideo() {
+            const video = document.getElementById('interactive-shop-video');
+            const container = document.getElementById('video-container-box');
+            if(!video || !container) return;
+            video.addEventListener('ended', () => container.classList.add('ended'));
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { if (!video.ended) video.play().catch(e => {}); }
+                    else { if (!video.ended) video.pause(); }
+                });
+            }, { threshold: 0.3 });
+            observer.observe(video);
+        }
+
+        function replayInteractiveVideo() {
+            const video = document.getElementById('interactive-shop-video');
+            const container = document.getElementById('video-container-box');
+            if(!video || !container) return;
+            container.classList.remove('ended'); video.currentTime = 0; video.play().catch(e => {});
+        }
+
+        function initHeroSlider() {
+            const slides = document.querySelectorAll('.hero-slide');
+            if(slides.length === 0) return;
+            let currentIdx = 0;
+            setInterval(() => {
+                slides[currentIdx].classList.remove('active');
+                currentIdx = (currentIdx + 1) % slides.length;
+                slides[currentIdx].classList.add('active');
+            }, 7000);
+        }
+
+        function initStorySlider() {
+            const slides = document.querySelectorAll('.story-slide');
+            if(slides.length === 0) return;
+            let currentIdx = 0;
+            if(window.storySliderInterval) clearInterval(window.storySliderInterval);
+            window.storySliderInterval = setInterval(() => {
+                slides[currentIdx].classList.remove('active');
+                currentIdx = (currentIdx + 1) % slides.length;
+                slides[currentIdx].classList.add('active');
+            }, 5000);
+        }
+
+        function initDetailSlider() {
+            const slides = document.querySelectorAll('.detail-slide');
+            if(slides.length === 0) return;
+            let currentIdx = 0;
+            if(window.detailSliderInterval) clearInterval(window.detailSliderInterval);
+            window.detailSliderInterval = setInterval(() => {
+                slides[currentIdx].classList.remove('active');
+                currentIdx = (currentIdx + 1) % slides.length;
+                slides[currentIdx].classList.add('active');
+            }, 5000);
+        }
+
+        function applyTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            if(currentTheme === 'light') {
+                body.classList.remove('dark-theme'); body.classList.add('light-theme');
+                if(themeIcon) themeIcon.innerHTML = '☀️';
+            } else {
+                body.classList.remove('light-theme'); body.classList.add('dark-theme');
+                if(themeIcon) themeIcon.innerHTML = '🌙';
+            }
+            localStorage.setItem('site_theme_amateur', currentTheme);
+        }
+
+        function toggleTheme() { currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; applyTheme(); }
+
+        var articlesList = [{ id: 1, title: "كيف تختار عطرك التوقيعي بدقة؟", content: "دليلك الشامل لاختيار العطر المناسب لشخصيتك وفصول السنة المختلفة.", images: ["shop1.jpg", "shop2.jpg", "shop3.jpg"] }];
+
+        function showBlogPage() {
+            switchView('blog-view');
+            const container = document.getElementById('articles-feed-container');
+            container.innerHTML = articlesList.map(a => `<div class="luxury-card p-6 md:p-8 rounded-3xl space-y-6 shadow-2xl"><h3 class="text-xl md:text-2xl font-black text-amber-300 trajan-font">${a.title}</h3><div class="article-slider-container"><div class="article-slider-wrapper">${a.images.map((img, idx) => `<div class="article-slide ${idx === 0 ? 'active' : ''}"><img src="${img}"></div>`).join('')}</div></div><p class="text-xs md:text-sm opacity-90 leading-relaxed font-light">${a.content}</p></div>`).join('');
+        }
+
+        applyTheme(); updateAuthDisplay(); initHeroSlider(); initInteractiveVideo(); syncPerfumesFromCloud();
+    </script>
+</body>
+</html>
